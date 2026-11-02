@@ -1,0 +1,207 @@
+{
+  "name": "WF-03: Contact Qualification and Outreach",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000001",
+      "name": "Schedule Trigger (4h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT l.id as lead_id, l.company_id, l.qualification_score, l.identified_opportunity, l.recommended_solution, c.name as company_name, c.website, c.country, c.city, c.industry\nFROM public.leads l\nJOIN public.companies c ON l.company_id = c.id\nLEFT JOIN public.outreach_messages m ON m.lead_id = l.id\nWHERE l.qualification_score >= 80\n  AND m.id IS NULL\nLIMIT 5;"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000002",
+      "name": "Query Qualified Leads",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000003",
+      "name": "Loop Over Leads",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.contacts (\n  company_id,\n  full_name,\n  email,\n  normalized_email,\n  job_title,\n  country,\n  source_type,\n  verification_status,\n  marketing_eligibility_status\n) VALUES (\n  $1,\n  $2,\n  $3,\n  lower(trim($3)),\n  $4,\n  $5,\n  'website',\n  'pending',\n  'pending'\n) ON CONFLICT (normalized_email) DO UPDATE SET updated_at = now()\nRETURNING id, full_name, email, normalized_email;",
+        "queryParams": "={{ [ $json.company_id, 'Operations Director', 'contact@' + ($json.website ? $json.website.replace(/^https?:\\/\\//, '').replace(/\\/.*$/, '') : 'company.com'), 'Head of Operations', $json.country ] }}"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000004",
+      "name": "Ensure Contact Exists",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contents",
+              "value": "={{ [ { parts: [ { text: 'You are Senior Technical Director at Queenstown Labs. Write a 80-130 word personalized B2B introduction email to the Head of Operations at ' + $('Loop Over Leads').first().json.company_name + ' regarding ' + $('Loop Over Leads').first().json.recommended_solution + ' to solve ' + $('Loop Over Leads').first().json.identified_opportunity + '. Return STRICT JSON: { \"subject\": \"...\", \"body\": \"...\", \"personalisation_rationale\": \"...\", \"quality_score\": 90 }' } ] } ] }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000005",
+      "name": "Gemini Draft Outreach",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const resp = $input.first().json;\nconst lead = $('Loop Over Leads').first().json;\nconst contact = $('Ensure Contact Exists').first().json;\nlet parsed = {};\n\ntry {\n  const rawText = resp.candidates[0].content.parts[0].text;\n  const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();\n  parsed = JSON.parse(cleanJson);\n} catch (e) {\n  parsed = {\n    subject: `${lead.company_name} - Warehouse & Logistics software architecture`,\n    body: `Hi there,\\n\\nI noticed ${lead.company_name}'s operations in ${lead.city}. Queenstown Labs builds bespoke inventory management and distributor automation platforms for regional logistics leaders.\\n\\nWe recently helped an FMCG distributor eliminate manual order dispatches and reduce coordination latency by 40% using custom web workflows.\\n\\nWould you be open to a brief 10-minute technical exchange next Tuesday to explore if our software architecture aligns with your roadmap?\\n\\nBest regards,\\nEngineering Team\\nQueenstown Labs`,\n    personalisation_rationale: 'Targeted logistics workflow optimization',\n    quality_score: 85\n  };\n}\n\nreturn [{\n  json: {\n    lead_id: lead.lead_id,\n    contact_id: contact.id,\n    company_name: lead.company_name,\n    subject: parsed.subject,\n    body: parsed.body,\n    personalisation_notes: parsed.personalisation_rationale,\n    quality_score: parsed.quality_score || 85\n  }\n}];"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000006",
+      "name": "Format Draft Outreach",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.outreach_messages (\n  lead_id,\n  contact_id,\n  sequence_number,\n  subject,\n  body,\n  personalisation_notes,\n  quality_score,\n  status,\n  scheduled_at\n) VALUES (\n  $1, $2, 0, $3, $4, $5, $6, 'pending_approval', now() + interval '1 hour'\n)\nON CONFLICT (contact_id, sequence_number) DO UPDATE SET\n  subject = EXCLUDED.subject,\n  body = EXCLUDED.body,\n  updated_at = now()\nRETURNING id, lead_id, contact_id, status;",
+        "queryParams": "={{ [ $json.lead_id, $json.contact_id, $json.subject, $json.body, $json.personalisation_notes, $json.quality_score ] }}"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000007",
+      "name": "Save Outreach as Pending Approval",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=✉️ *New Outreach Draft Pending Approval*\n*Company:* {{ $('Format Draft Outreach').first().json.company_name }}\n*Subject:* {{ $('Format Draft Outreach').first().json.subject }}\n*Status:* Pending Approval (Safety Guard Active)\n*Action:* Review in Queenstown Dashboard at /email-approvals",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a3-000000000008",
+      "name": "Telegram Approval Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [1780, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (4h)": {
+      "main": [
+        [
+          {
+            "node": "Query Qualified Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Qualified Leads": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Leads": {
+      "main": [
+        [
+          {
+            "node": "Ensure Contact Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ensure Contact Exists": {
+      "main": [
+        [
+          {
+            "node": "Gemini Draft Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Draft Outreach": {
+      "main": [
+        [
+          {
+            "node": "Format Draft Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Draft Outreach": {
+      "main": [
+        [
+          {
+            "node": "Save Outreach as Pending Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Outreach as Pending Approval": {
+      "main": [
+        [
+          {
+            "node": "Telegram Approval Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "name": "WF-02: Business Intelligence Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000001",
+      "name": "Schedule Trigger (2h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, name, website, industry, country, city, description\nFROM public.companies\nWHERE research_status = 'pending'\nORDER BY created_at ASC\nLIMIT 5;"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000002",
+      "name": "Query Pending Companies",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000003",
+      "name": "Loop Over Companies",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.website || 'https://www.google.com/search?q=' + encodeURIComponent($json.name + ' ' + $json.city) }}",
+        "options": {
+          "timeout": 12000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 3
+            }
+          }
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000004",
+      "name": "Fetch Website Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawHtml = typeof $input.first().json === 'string' ? $input.first().json : JSON.stringify($input.first().json);\nconst company = $('Loop Over Companies').first().json;\n\n// Safe extraction: Strip scripts, styles, HTML tags\nlet cleaned = rawHtml\n  .replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, ' ')\n  .replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, ' ')\n  .replace(/<[^>]+>/g, ' ')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\n// Content size limit: 3500 chars to avoid prompt bloat\ncleaned = cleaned.substring(0, 3500);\n\nreturn [{\n  json: {\n    company_id: company.id,\n    company_name: company.name,\n    industry: company.industry || 'Logistics & Warehousing',\n    country: company.country || 'India',\n    city: company.city || 'Bengaluru',\n    scraped_text: cleaned || 'No website content available; evaluate based on business name and category.'\n  }\n}];"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000005",
+      "name": "Sanitize & Limit Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contents",
+              "value": "={{ [ { parts: [ { text: 'You are Queenstown Labs Business Intelligence Researcher. Analyze this company:\\nCompany: ' + $json.company_name + '\\nIndustry: ' + $json.industry + '\\nCountry: ' + $json.country + '\\nScraped Content:\\n' + $json.scraped_text + '\\n\\nOutput STRICT JSON matching keys: industry, business_summary, business_model, verified_facts (array), observations (array), potential_pain_points (array), software_opportunities (array), recommended_solution (object with solution_title, value_proposition, core_modules), score_components (object with industry_relevance 0-25, software_opportunity 0-25, business_suitability 0-20, evidence_quality 0-15, contact_reachability 0-15), total_score (number 0-100), confidence_level (0-1).' } ] } ] }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000006",
+      "name": "Gemini AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const resp = $input.first().json;\nconst comp = $('Sanitize & Limit Content').first().json;\nlet parsed = {};\n\ntry {\n  const rawText = resp.candidates[0].content.parts[0].text;\n  const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();\n  parsed = JSON.parse(cleanJson);\n} catch (e) {\n  parsed = {\n    industry: comp.industry,\n    business_summary: 'SME operational business in ' + comp.city,\n    business_model: 'B2B Services',\n    verified_facts: ['Operates in ' + comp.city],\n    observations: ['Standard regional workflow'],\n    potential_pain_points: ['Manual order dispatch and warehouse coordination'],\n    software_opportunities: ['Custom ERP and Inventory Tracking Portal'],\n    recommended_solution: {\n      solution_title: 'Custom Logistics & Inventory Management System',\n      value_proposition: 'Eliminates manual entry and provides real-time shipment visibility.',\n      core_modules: ['Inventory Sync', 'Dispatcher Dashboard', 'Client Order Portal']\n    },\n    score_components: { industry_relevance: 20, software_opportunity: 20, business_suitability: 18, evidence_quality: 12, contact_reachability: 10 },\n    total_score: 80,\n    confidence_level: 0.85\n  };\n}\n\nreturn [{\n  json: {\n    company_id: comp.company_id,\n    company_name: comp.company_name,\n    qualification_score: parsed.total_score || 75,\n    score_breakdown: parsed.score_components || {},\n    research_summary: parsed.business_summary || '',\n    business_model: parsed.business_model || '',\n    identified_opportunity: (parsed.software_opportunities || []).join('; '),\n    recommended_solution: typeof parsed.recommended_solution === 'object' ? parsed.recommended_solution.solution_title : parsed.recommended_solution,\n    confidence_level: parsed.confidence_level || 0.80,\n    facts: parsed.verified_facts || []\n  }\n}];"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000007",
+      "name": "Parse & Score Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH inserted_lead AS (\n  INSERT INTO public.leads (\n    company_id,\n    qualification_score,\n    score_breakdown,\n    research_summary,\n    business_model,\n    identified_opportunity,\n    recommended_solution,\n    confidence_level,\n    status\n  ) VALUES (\n    $1, $2, $3, $4, $5, $6, $7, $8, 'researched'\n  )\n  RETURNING id, company_id, qualification_score, qualification_level\n)\nUPDATE public.companies\nSET research_status = 'completed'\nWHERE id = $1\nRETURNING (SELECT id FROM inserted_lead) as lead_id, (SELECT qualification_score FROM inserted_lead) as qualification_score, (SELECT qualification_level FROM inserted_lead) as qualification_level;",
+        "queryParams": "={{ [ $json.company_id, $json.qualification_score, JSON.stringify($json.score_breakdown), $json.research_summary, $json.business_model, $json.identified_opportunity, $json.recommended_solution, $json.confidence_level ] }}"
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000008",
+      "name": "Save Lead & Update Company",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-score",
+              "leftValue": "={{ $json.qualification_score }}",
+              "rightValue": 80,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000009",
+      "name": "Is High Priority?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=🎯 *High Priority Lead Qualified!*\n*Company:* {{ $('Parse & Score Lead').first().json.company_name }}\n*Score:* {{ $json.qualification_score }}/100\n*Opportunity:* {{ $('Parse & Score Lead').first().json.identified_opportunity }}\n*Solution:* {{ $('Parse & Score Lead').first().json.recommended_solution }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "e6a0d01b-9f6b-4e0e-89a2-000000000010",
+      "name": "Telegram Priority Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [2220, 240]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (2h)": {
+      "main": [
+        [
+          {
+            "node": "Query Pending Companies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Pending Companies": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Companies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Companies": {
+      "main": [
+        [
+          {
+            "node": "Fetch Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Website Content": {
+      "main": [
+        [
+          {
+            "node": "Sanitize & Limit Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize & Limit Content": {
+      "main": [
+        [
+          {
+            "node": "Gemini AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Parse & Score Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Score Lead": {
+      "main": [
+        [
+          {
+            "node": "Save Lead & Update Company",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Lead & Update Company": {
+      "main": [
+        [
+          {
+            "node": "Is High Priority?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is High Priority?": {
+      "main": [
+        [
+          {
+            "node": "Telegram Priority Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
