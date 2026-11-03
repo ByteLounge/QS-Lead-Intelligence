@@ -154,16 +154,16 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
-        "text": "=🎯 *High Priority Lead Qualified!*\n*Company:* {{ $('Parse & Score Lead').first().json.company_name }}\n*Score:* {{ $json.qualification_score }}/100\n*Opportunity:* {{ $('Parse & Score Lead').first().json.identified_opportunity }}\n*Solution:* {{ $('Parse & Score Lead').first().json.recommended_solution }}",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"Queenstown Lead Bot\",\n  \"embeds\": [{\n    \"title\": \"🎯 High Priority Lead Qualified!\",\n    \"description\": \"**Company:** \" + ($('Parse & Score Lead').first().json.company_name || 'Prospect') + \"\\n**Score:** \" + $json.qualification_score + \"/100\\n**Opportunity:** \" + ($('Parse & Score Lead').first().json.identified_opportunity || 'Custom Software') + \"\\n**Recommended Solution:** \" + ($('Parse & Score Lead').first().json.recommended_solution || 'Tailored Development'),\n    \"color\": 1096065,\n    \"fields\": [\n      { \"name\": \"Priority\", \"value\": \"High Priority (≥80)\", \"inline\": true },\n      { \"name\": \"Action Required\", \"value\": \"Generate Outreach Draft\", \"inline\": true }\n    ]\n  }]\n}"
       },
       "id": "e6a0d01b-9f6b-4e0e-89a2-000000000010",
-      "name": "Telegram Priority Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "name": "Discord Priority Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [2220, 240]
     }
   ],
@@ -260,7 +260,7 @@
       "main": [
         [
           {
-            "node": "Telegram Priority Alert",
+            "node": "Discord Priority Alert",
             "type": "main",
             "index": 0
           }

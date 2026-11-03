@@ -41,16 +41,16 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
-        "text": "={{ $json.report_markdown }}",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"Queenstown Lead Bot\",\n  \"embeds\": [{\n    \"title\": \"📊 Queenstown Daily Pipeline Digest\",\n    \"description\": $json.report_markdown || 'Daily pipeline digest',\n    \"color\": 1096065,\n    \"footer\": { \"text\": \"Queenstown Labs • Autonomous CRM Reporting\" },\n    \"timestamp\": new Date().toISOString()\n  }]\n}"
       },
       "id": "e6a0d01b-9f6b-4e0e-89a6-000000000004",
-      "name": "Send Telegram Daily Report",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "name": "Send Discord Daily Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [900, 300]
     }
   ],
@@ -81,7 +81,7 @@
       "main": [
         [
           {
-            "node": "Send Telegram Daily Report",
+            "node": "Send Discord Daily Report",
             "type": "main",
             "index": 0
           }

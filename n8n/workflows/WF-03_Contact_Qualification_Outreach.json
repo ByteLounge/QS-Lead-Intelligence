@@ -108,16 +108,16 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
-        "text": "=✉️ *New Outreach Draft Pending Approval*\n*Company:* {{ $('Format Draft Outreach').first().json.company_name }}\n*Subject:* {{ $('Format Draft Outreach').first().json.subject }}\n*Status:* Pending Approval (Safety Guard Active)\n*Action:* Review in Queenstown Dashboard at /email-approvals",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"Queenstown Lead Bot\",\n  \"embeds\": [{\n    \"title\": \"✉️ New Outreach Draft Pending Approval\",\n    \"description\": \"**Company:** \" + ($('Format Draft Outreach').first().json.company_name || 'Prospect') + \"\\n**Subject:** \" + ($('Format Draft Outreach').first().json.subject || 'Intro') + \"\\n**Status:** Pending Approval (Safety Guard Active)\",\n    \"color\": 9133302,\n    \"fields\": [\n      { \"name\": \"Action Required\", \"value\": \"Review draft at [queenstownlabslead.vercel.app/email-approvals](https://queenstownlabslead.vercel.app/email-approvals)\", \"inline\": false }\n    ]\n  }]\n}"
       },
       "id": "e6a0d01b-9f6b-4e0e-89a3-000000000008",
-      "name": "Telegram Approval Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "name": "Discord Approval Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [1780, 300]
     }
   ],
@@ -192,7 +192,7 @@
       "main": [
         [
           {
-            "node": "Telegram Approval Alert",
+            "node": "Discord Approval Alert",
             "type": "main",
             "index": 0
           }

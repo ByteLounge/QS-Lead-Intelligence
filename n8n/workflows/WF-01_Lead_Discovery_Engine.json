@@ -137,16 +137,16 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
-        "text": "=🏢 *New Lead Discovered*\n*Company:* {{ $json.name }}\n*Source:* Google Places\n*Location:* Bengaluru, India\n*ID:* `{{ $json.id }}`",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"Queenstown Lead Bot\",\n  \"embeds\": [{\n    \"title\": \"🏢 New Lead Discovered\",\n    \"description\": \"**Company:** \" + $json.name + \"\\n**Source:** Google Places\\n**Location:** Bengaluru, India\",\n    \"color\": 3901686,\n    \"fields\": [{ \"name\": \"Company ID\", \"value\": $json.id || 'N/A', \"inline\": true }]\n  }]\n}"
       },
       "id": "e6a0d01b-9f6b-4e0e-89a1-000000000008",
-      "name": "Telegram Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "name": "Discord Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [1560, 360]
     }
   ],
@@ -221,7 +221,7 @@
       "main": [
         [
           {
-            "node": "Telegram Alert",
+            "node": "Discord Alert",
             "type": "main",
             "index": 0
           }

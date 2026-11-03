@@ -1,4 +1,6 @@
-// Queenstown Lead Intelligence - Telegram Notification Dispatcher
+// Queenstown Lead Intelligence - Notification Dispatcher (Discord & Telegram)
+
+import { sendDiscordNotification } from './discord';
 
 export interface TelegramAlertPayload {
   title: string;
@@ -8,6 +10,13 @@ export interface TelegramAlertPayload {
 }
 
 export async function sendTelegramNotification(alert: TelegramAlertPayload): Promise<boolean> {
+  // Always dispatch to Discord webhook if configured
+  await sendDiscordNotification({
+    title: alert.title,
+    message: alert.message,
+    level: alert.level,
+  }).catch((err) => console.error('Discord dispatch error:', err));
+
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 

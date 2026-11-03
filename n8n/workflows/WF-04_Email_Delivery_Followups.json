@@ -120,16 +120,16 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
-        "text": "=🚀 *Outreach Email Sent*\n*To:* {{ $json.recipient_name }} <{{ $json.recipient_email }}>\n*Subject:* {{ $json.subject }}\n*Sequence:* {{ $json.sequence_number == 0 ? 'Day 0 Initial Intro' : ($json.sequence_number == 1 ? 'Day 4 Follow-up' : 'Day 9 Break-up') }}",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"Queenstown Lead Bot\",\n  \"embeds\": [{\n    \"title\": \"🚀 Outreach Email Sent\",\n    \"description\": \"**To:** \" + ($json.recipient_name || 'Contact') + \" <\" + $json.recipient_email + \">\\n**Subject:** \" + $json.subject,\n    \"color\": 440020,\n    \"fields\": [\n      { \"name\": \"Sequence Touch\", \"value\": $json.sequence_number == 0 ? 'Day 0 Initial Intro' : ($json.sequence_number == 1 ? 'Day 4 Follow-up' : 'Day 9 Break-up'), \"inline\": true },\n      { \"name\": \"Status\", \"value\": \"Dispatched via Gmail\", \"inline\": true }\n    ]\n  }]\n}"
       },
       "id": "e6a0d01b-9f6b-4e0e-89a4-000000000006",
-      "name": "Telegram Dispatch Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "name": "Discord Dispatch Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [1340, 300]
     }
   ],
@@ -182,7 +182,7 @@
       "main": [
         [
           {
-            "node": "Telegram Dispatch Alert",
+            "node": "Discord Dispatch Alert",
             "type": "main",
             "index": 0
           }

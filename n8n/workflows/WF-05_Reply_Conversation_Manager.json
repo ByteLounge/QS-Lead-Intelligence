@@ -147,16 +147,16 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
-        "text": "=🎉 *HOT LEAD: Meeting Requested!*\n*Company:* {{ $('Merge Classification').first().json.company_name }}\n*From:* {{ $('Merge Classification').first().json.from_email }}\n*Summary:* {{ $('Merge Classification').first().json.summary }}\n*Status:* Follow-up sequences cancelled; Lead promoted to Pipeline stage 'Meeting Requested'.",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": \"Queenstown Lead Bot\",\n  \"embeds\": [{\n    \"title\": \"🎉 HOT LEAD: Meeting Requested!\",\n    \"description\": \"**Company:** \" + ($('Merge Classification').first().json.company_name || 'Prospect') + \"\\n**From:** \" + $('Merge Classification').first().json.from_email + \"\\n**Summary:** \" + $('Merge Classification').first().json.summary,\n    \"color\": 16096779,\n    \"fields\": [\n      { \"name\": \"Status\", \"value\": \"Follow-up sequence cancelled; Promoted to 'Meeting Requested'\", \"inline\": false },\n      { \"name\": \"Action Required\", \"value\": \"Check Inbox at [queenstownlabslead.vercel.app/inbox](https://queenstownlabslead.vercel.app/inbox)\", \"inline\": false }\n    ]\n  }]\n}"
       },
       "id": "e6a0d01b-9f6b-4e0e-89a5-000000000010",
-      "name": "Telegram Meeting Alert",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "name": "Discord Meeting Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [2040, 460]
     }
   ],
@@ -249,7 +249,7 @@
       "main": [
         [
           {
-            "node": "Telegram Meeting Alert",
+            "node": "Discord Meeting Alert",
             "type": "main",
             "index": 0
           }
