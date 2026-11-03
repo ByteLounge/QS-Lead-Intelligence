@@ -39,7 +39,7 @@ const PIPELINES: CronPipeline[] = [
     id: 'PIPE-01',
     name: 'Lead Discovery & Gemini AI Scoring Engine',
     endpoint: '/api/cron/discovery',
-    schedule: 'Every 6 Hours (0 */6 * * *)',
+    schedule: 'Daily at 06:00 UTC (0 6 * * *) · Vercel Cron',
     purpose:
       'Queries Google Places API across target sectors, ingests domains into Supabase, scrapes company landing pages, and runs Gemini 2.5 Flash 100-point qualification scoring.',
     tags: ['Places API', 'Web Scraping', 'Gemini 2.5 Flash', 'Lead Scoring'],
@@ -49,7 +49,7 @@ const PIPELINES: CronPipeline[] = [
     id: 'PIPE-02',
     name: 'Autonomous High-Priority Queue & Dispatch Engine',
     endpoint: '/api/cron/dispatch',
-    schedule: 'Every 15 Minutes (*/15 * * * *)',
+    schedule: 'Every 15 Minutes · cron-job.org Pinger',
     purpose:
       'Claims eligible outreach drafts with FOR UPDATE SKIP LOCKED, verifies global sending kill switch and recipient suppression, and delivers via Gmail OAuth2 transport.',
     tags: ['Row-Level Locking', 'Suppression Guard', 'Gmail OAuth2', 'Daily Limits'],
@@ -59,7 +59,7 @@ const PIPELINES: CronPipeline[] = [
     id: 'PIPE-03',
     name: 'Daily Executive Digest & Telegram Briefing',
     endpoint: '/api/cron/digest',
-    schedule: 'Daily at 09:00 UTC (0 9 * * *)',
+    schedule: 'Daily at 18:00 UTC (0 18 * * *) · Vercel Cron',
     purpose:
       'Aggregates 24-hour lead acquisition metrics, reply sentiment breakdown, and sends an executive formatted briefing to Telegram and Discord webhooks.',
     tags: ['CRM Telemetry', 'Discord Webhook', 'Telegram Bot', 'Analytics'],
@@ -147,19 +147,19 @@ export default function AutomationsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
               <div className="p-3 bg-white/5 rounded-xl border border-white/10">
                 <span className="text-[10px] text-zinc-400 font-mono uppercase block">Discovery Engine</span>
-                <span className="font-semibold text-white mt-0.5 block">Every 6 Hours</span>
+                <span className="font-semibold text-white mt-0.5 block">Daily 06:00 UTC</span>
                 <span className="text-[10px] text-zinc-400 mt-0.5 block">Places API + Web Scrape + AI</span>
               </div>
 
               <div className="p-3 bg-white/5 rounded-xl border border-white/10">
                 <span className="text-[10px] text-zinc-400 font-mono uppercase block">Outreach Dispatch</span>
                 <span className="font-semibold text-white mt-0.5 block">Every 15 Minutes</span>
-                <span className="text-[10px] text-zinc-400 mt-0.5 block">cron-job.org / Vercel Cron</span>
+                <span className="text-[10px] text-zinc-400 mt-0.5 block">cron-job.org Trigger</span>
               </div>
 
               <div className="p-3 bg-white/5 rounded-xl border border-white/10">
                 <span className="text-[10px] text-zinc-400 font-mono uppercase block">Daily Digest</span>
-                <span className="font-semibold text-white mt-0.5 block">Daily 09:00 UTC</span>
+                <span className="font-semibold text-white mt-0.5 block">Daily 18:00 UTC</span>
                 <span className="text-[10px] text-zinc-400 mt-0.5 block">Telegram &amp; Discord Notifications</span>
               </div>
             </div>
