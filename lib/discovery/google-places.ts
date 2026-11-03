@@ -156,8 +156,8 @@ export class GooglePlacesDiscoveryProvider implements IDiscoveryProvider {
         const genAI = new GoogleGenerativeAI(geminiKey);
         const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
 
-        const prompt = `Return a JSON array of ${params.maxResults || 5} REAL, actual registered companies in ${params.city ? params.city + ', ' : ''}${params.country} in the sector "${params.industry || params.keyword}".
-Do not make up fake domain names or demo suffixes. Return real commercial organizations with their real domains and websites.
+        const prompt = `Return a JSON array of ${params.maxResults || 5} REAL, actual registered companies in ${params.city ? params.city + ', ' : ''}${params.country} in the sector "${params.industry || params.keyword}" that can benefit from software studio engineering services (such as custom mobile apps, modern website redesigns, customer booking/ordering portals, or digital workflows).
+Do not make up fake domain names or demo suffixes. Return real commercial organizations with their real domains, physical addresses, and websites.
 Output strictly a JSON array without markdown formatting:
 [
   {
@@ -165,7 +165,7 @@ Output strictly a JSON array without markdown formatting:
     "website": "https://www.realcompanydomain.com",
     "domain": "realcompanydomain.com",
     "address": "Real physical office or hub address in ${params.city || params.country}",
-    "description": "Real business summary of services and operational scale"
+    "description": "Real business summary of services, operational scale, and digital software/app/website gaps"
   }
 ]`;
 

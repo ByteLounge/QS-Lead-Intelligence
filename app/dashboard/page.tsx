@@ -52,6 +52,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = React.useState(true);
   const [isDiscoveryOpen, setIsDiscoveryOpen] = React.useState(false);
   const [isCreateCompanyOpen, setIsCreateCompanyOpen] = React.useState(false);
+  const [isRunningAutonomous, setIsRunningAutonomous] = React.useState(false);
 
   const fetchMetrics = async () => {
     try {
@@ -63,6 +64,39 @@ export default function DashboardPage() {
       console.error('Failed to load metrics:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRunAutonomous = async () => {
+    try {
+      setIsRunningAutonomous(true);
+      toast({
+        title: 'Autonomous AI Cycle Launched',
+        message: 'Scanning for companies that need apps or websites, analyzing gaps, and updating pipeline...',
+        type: 'info',
+      });
+      const res = await fetch('/api/autonomous/run', { method: 'POST' });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Autonomous cycle failed');
+
+      const discoveredCount = json.discoveredCount || 0;
+      const highPriority = json.highPriorityCount || 0;
+      const sentCount = json.emailsSentCount || 0;
+      const pendingCount = json.draftsPendingCount || 0;
+
+      toast({
+        title: 'Autonomous Cycle Completed!',
+        message: `Found ${discoveredCount} companies (${highPriority} high-priority). ${
+          sentCount > 0 ? `${sentCount} email(s) mailed.` : `${pendingCount} outreach draft(s) created.`
+        } Updated Discord & Dashboard.`,
+        type: 'success',
+      });
+      await fetchMetrics();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: 'Autonomous Cycle Error', message: msg, type: 'error' });
+    } finally {
+      setIsRunningAutonomous(false);
     }
   };
 
@@ -134,6 +168,15 @@ export default function DashboardPage() {
               >
                 <RefreshCw className={`h-3 w-3 text-[#666666] ${loading ? 'animate-spin' : ''}`} />
                 <span>Refresh</span>
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleRunAutonomous}
+                disabled={isRunningAutonomous}
+                className="h-8 gap-1.5 text-xs rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs font-medium"
+              >
+                <Zap className={`h-3 w-3 ${isRunningAutonomous ? 'animate-spin' : ''}`} />
+                <span>{isRunningAutonomous ? 'AI Discovering...' : '⚡ Run Autonomous AI'}</span>
               </Button>
               <Button
                 size="sm"

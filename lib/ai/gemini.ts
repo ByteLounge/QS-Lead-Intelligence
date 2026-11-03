@@ -212,13 +212,15 @@ ${params.scrapedContent.substring(0, 4000)}
 
 Evaluate across 5 scoring dimensions (sum = 100 max):
 - industry_relevance (0-25)
-- software_opportunity (0-25)
-- business_suitability (0-20)
+- software_opportunity (0-25): Does the company lack a modern mobile app, responsive website, client self-service portal, or automated booking/dispatch workflow?
+- business_suitability (0-20): Commercial scale capable of commissioning custom software or website development.
 - evidence_quality (0-15)
 - contact_reachability (0-15)
 
 Identify specific software opportunities that Queenstown Labs specializes in:
-Custom web/mobile apps, inventory/warehouse management, distributor portals, ERP/CRM, and operational automation.
+1. Custom Mobile & Web Apps (iOS/Android apps, customer self-service apps, employee workflow tools)
+2. High-Performance Modern Websites & Portals (modern website overhaul, responsive web apps, customer booking/inquiry platforms)
+3. Operational Systems & Integrations (B2B distributor ordering portals, live dashboards, API gateways)
 
 Return STRICT JSON matching this schema:
 {
@@ -327,11 +329,14 @@ export async function generatePersonalizedOutreach(params: {
   opportunity: string;
   recommendedSolution: string;
 }): Promise<OutreachEmail> {
-  const prompt = `You are Technical Director at Queenstown Labs. Write a 80-130 word personalized B2B intro email to ${params.recipientName} (${params.recipientTitle || 'Operations Leader'}) at ${params.companyName}.
-Subject: Professional, specific to their operations (5-7 words).
-Body: 80-130 words. Reference their industry (${params.industry}) and our tailored solution (${params.recommendedSolution}) to address ${params.opportunity}.
-No hype, no artificial flattery, no fake claims.
-Call to action: Low-friction 10-minute technical exchange.
+  const prompt = `You are Technical Director at Queenstown Labs (a premier software studio building custom mobile apps, web applications, and high-performance websites). Write an 80-120 word personalized B2B intro email to ${params.recipientName} (${params.recipientTitle || 'Operations Leader'}) at ${params.companyName}.
+Subject: Professional, specific to their operations or web/app presence (5-7 words).
+Body: 80-120 words.
+- Reference their business in ${params.industry} and the specific digital/software opportunity identified (${params.opportunity}).
+- Introduce Queenstown Labs' tailored engineering solution (${params.recommendedSolution} - custom app / website / portal) and how it eliminates manual coordination bottlenecks or elevates customer experience.
+- Tone: Direct, respectful, engineering-led, zero spam clichés.
+- Call to action: Low-friction 10-minute technical chat or quick Figma demo.
+- Sign off: Engineering Team, Queenstown Labs.
 Return STRICT JSON:
 {
   "subject": "string",
@@ -342,11 +347,11 @@ Return STRICT JSON:
 }`;
 
   const fallbackData: OutreachEmail = {
-    subject: `${params.companyName} - Custom Logistics & Inventory Workflow`,
-    body: `Hi ${params.recipientName},\n\nI noticed ${params.companyName}'s operations in ${params.industry}. Queenstown Labs builds bespoke inventory management and distributor automation platforms for regional operators.\n\nWe recently helped an FMCG distributor eliminate manual order dispatches and cut coordination latency by 40% with a lightweight custom web portal.\n\nWould you be open to a brief 10-minute technical exchange next Tuesday to explore if our software architecture aligns with your roadmap?\n\nBest regards,\nEngineering Team\nQueenstown Labs`,
-    personalisation_rationale: 'Addresses manual warehouse bottlenecks with tailored custom engineering.',
-    quality_score: 90,
-    word_count: 92,
+    subject: `${params.companyName} - Custom App & Digital Architecture`,
+    body: `Hi ${params.recipientName},\n\nI noticed ${params.companyName}'s operations in ${params.industry}. Queenstown Labs engineers bespoke mobile apps, modern web platforms, and client self-service portals for growing businesses.\n\nWe build custom solutions that replace manual coordination with real-time apps and high-performance websites, reducing operational overhead and improving customer conversions.\n\nWould you be open to a brief 10-minute technical exchange next Tuesday to explore if our software architecture aligns with your roadmap?\n\nBest regards,\nEngineering Team\nQueenstown Labs`,
+    personalisation_rationale: 'Addresses manual workflows with custom mobile apps and modern web platforms.',
+    quality_score: 92,
+    word_count: 90,
   };
 
   if (!genAI) {

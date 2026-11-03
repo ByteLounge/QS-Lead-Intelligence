@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase/client';
-import { evaluateSendingEligibility } from '@/lib/compliance/safeguards';
-import { sendEmailViaGmail } from '@/lib/email/gmail';
+import { evaluateSendingEligibility, getComplianceSettings } from '@/lib/compliance/safeguards';
+import { dispatchOutreachEmail } from '@/lib/email/dispatcher';
 import { sendDiscordNotification } from '@/lib/notifications/discord';
 
 export const maxDuration = 60;
@@ -66,10 +66,13 @@ async function handleAutopilotDispatch(req: NextRequest) {
 
       if (!contact || !contact.email) continue;
 
-      const result = await sendEmailViaGmail({
+      const compliance = await getComplianceSettings();
+      const result = await dispatchOutreachEmail({
         to: contact.email,
         subject: msg.subject,
         body: msg.body,
+        fromName: compliance.sender_name || 'Queenstown Labs',
+        fromEmail: compliance.sender_email,
       });
 
       if (result.success) {
