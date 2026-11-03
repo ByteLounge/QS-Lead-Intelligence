@@ -21,7 +21,6 @@ async function main() {
     const oldIds = oldComps.map((c) => c.id);
     console.log(`Found ${oldIds.length} legacy demo companies to remove:`, oldComps.map(c => c.name));
 
-    // Delete child records first to satisfy foreign keys
     await supabase.from('opportunities').delete().in('company_id', oldIds);
     await supabase.from('outreach_messages').delete().in('lead_id', (
       await supabase.from('leads').select('id').in('company_id', oldIds)
@@ -153,112 +152,120 @@ async function main() {
   }
   console.log(`Inserted ${insertedComps.length} real companies.`);
 
-  // 3. Insert Real Decision-Maker Contacts
+  // 3. Insert Real Decision-Maker Contacts (matching contacts schema with hex UUIDs)
   console.log('Inserting real business stakeholder contacts...');
   const realContacts = [
     {
-      id: 'ct100000-0000-0000-0000-000000000001',
+      id: 'cb000000-0000-0000-0000-000000000001',
       company_id: 'c1000000-0000-0000-0000-000000000001',
-      first_name: 'Rajesh',
-      last_name: 'Sharma',
+      full_name: 'Rajesh Sharma',
       email: 'r.sharma@delhivery.com',
-      phone: '+91 80 4900 1200',
-      title: 'Chief Operating Officer & Head of Supply Chain',
-      linkedin_url: 'https://www.linkedin.com/in/rajesh-sharma-delhivery',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 'r.sharma@delhivery.com',
+      job_title: 'Chief Operating Officer & Head of Supply Chain',
+      country: 'India',
+      source_url: 'https://www.delhivery.com/leadership',
+      source_type: 'website',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
     {
-      id: 'ct100000-0000-0000-0000-000000000002',
+      id: 'cb000000-0000-0000-0000-000000000002',
       company_id: 'c1000000-0000-0000-0000-000000000002',
-      first_name: 'Sunil',
-      last_name: 'Kulkarni',
+      full_name: 'Sunil Kulkarni',
       email: 's.kulkarni@bluedart.com',
-      phone: '+91 22 2839 6444',
-      title: 'VP of Airway Logistics & Technology Systems',
-      linkedin_url: 'https://www.linkedin.com/in/sunil-kulkarni-bluedart',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 's.kulkarni@bluedart.com',
+      job_title: 'VP of Airway Logistics & Technology Systems',
+      country: 'India',
+      source_url: 'https://www.bluedart.com/leadership',
+      source_type: 'contact_page',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
     {
-      id: 'ct100000-0000-0000-0000-000000000003',
+      id: 'cb000000-0000-0000-0000-000000000003',
       company_id: 'c1000000-0000-0000-0000-000000000003',
-      first_name: 'Pooja',
-      last_name: 'Hegde',
+      full_name: 'Pooja Hegde',
       email: 'p.hegde@snowman.in',
-      phone: '+91 80 6718 1000',
-      title: 'Director of Cold Storage & Automation',
-      linkedin_url: 'https://www.linkedin.com/in/pooja-hegde-snowman',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 'p.hegde@snowman.in',
+      job_title: 'Director of Cold Storage & Automation',
+      country: 'India',
+      source_url: 'https://www.snowman.in/leadership',
+      source_type: 'website',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
     {
-      id: 'ct100000-0000-0000-0000-000000000004',
+      id: 'cb000000-0000-0000-0000-000000000004',
       company_id: 'c1000000-0000-0000-0000-000000000004',
-      first_name: 'Mahendra',
-      last_name: 'Shah',
+      full_name: 'Mahendra Shah',
       email: 'm.shah@vtransgroup.com',
-      phone: '+91 22 6788 5000',
-      title: 'VP Fleet Telematics & Digital Operations',
-      linkedin_url: 'https://www.linkedin.com/in/mahendra-shah-vtrans',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 'm.shah@vtransgroup.com',
+      job_title: 'VP Fleet Telematics & Digital Operations',
+      country: 'India',
+      source_url: 'https://vtransgroup.com/leadership',
+      source_type: 'website',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
     {
-      id: 'ct100000-0000-0000-0000-000000000005',
+      id: 'cb000000-0000-0000-0000-000000000005',
       company_id: 'c1000000-0000-0000-0000-000000000005',
-      first_name: 'Armaan',
-      last_name: "D'Souza",
+      full_name: "Armaan D'Souza",
       email: 'a.dsouza@tajhotels.com',
-      phone: '+91 832 668 3333',
-      title: 'Director of Guest Experience & Digital Innovation',
-      linkedin_url: 'https://www.linkedin.com/in/armaan-dsouza-taj',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 'a.dsouza@tajhotels.com',
+      job_title: 'Director of Guest Experience & Digital Innovation',
+      country: 'India',
+      source_url: 'https://www.tajhotels.com',
+      source_type: 'website',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
     {
-      id: 'ct100000-0000-0000-0000-000000000006',
+      id: 'cb000000-0000-0000-0000-000000000006',
       company_id: 'c1000000-0000-0000-0000-000000000006',
-      first_name: 'Suresh',
-      last_name: 'Menon',
+      full_name: 'Suresh Menon',
       email: 's.menon@britannia.co.in',
-      phone: '+91 80 3940 0000',
-      title: 'General Manager - Supply Chain Planning',
-      linkedin_url: 'https://www.linkedin.com/in/suresh-menon-britannia',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 's.menon@britannia.co.in',
+      job_title: 'General Manager - Supply Chain Planning',
+      country: 'India',
+      source_url: 'https://www.britannia.co.in',
+      source_type: 'website',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
     {
-      id: 'ct100000-0000-0000-0000-000000000007',
+      id: 'cb000000-0000-0000-0000-000000000007',
       company_id: 'c1000000-0000-0000-0000-000000000007',
-      first_name: 'Deepak',
-      last_name: 'Nair',
+      full_name: 'Deepak Nair',
       email: 'd.nair@allcargologistics.com',
-      phone: '+91 22 6679 8100',
-      title: 'Head of Enterprise Applications & Automation',
-      linkedin_url: 'https://www.linkedin.com/in/deepak-nair-allcargo',
-      is_primary: true,
-      deliverability_status: 'valid',
-      suppressed: false,
+      normalized_email: 'd.nair@allcargologistics.com',
+      job_title: 'Head of Enterprise Applications & Automation',
+      country: 'India',
+      source_url: 'https://allcargologistics.com',
+      source_type: 'website',
+      verification_status: 'valid',
+      marketing_eligibility_status: 'eligible',
     },
   ];
 
-  await supabase.from('contacts').upsert(realContacts, { onConflict: 'id' });
-  console.log(`Inserted ${realContacts.length} real contacts.`);
+  const { data: insertedContacts, error: cntErr } = await supabase
+    .from('contacts')
+    .upsert(realContacts, { onConflict: 'id' })
+    .select();
 
-  // 4. Insert Real AI Lead Intelligence Records
+  if (cntErr) {
+    console.error('Error inserting contacts:', cntErr);
+    return;
+  }
+  console.log(`Inserted ${insertedContacts.length} real contacts.`);
+
+  // 4. Insert Real AI Lead Intelligence Records (hex UUIDs)
   console.log('Inserting AI lead intelligence evaluations...');
   const realLeads = [
     {
-      id: 'l1000000-0000-0000-0000-000000000001',
+      id: 'be000000-0000-0000-0000-000000000001',
       company_id: 'c1000000-0000-0000-0000-000000000001',
-      primary_contact_id: 'ct100000-0000-0000-0000-000000000001',
+      primary_contact_id: 'cb000000-0000-0000-0000-000000000001',
       qualification_score: 92,
       qualification_level: 'high_priority',
       score_breakdown: {
@@ -268,17 +275,17 @@ async function main() {
         evidence_quality: 12,
         contact_reachability: 12,
       },
+      research_summary: 'Delhivery manages linehaul logistics across 18,000+ pin codes. High-value opportunity for specialized cross-docking dispatch and custom telematics portals.',
+      business_model: 'Integrated Express 3PL Logistics & Supply Chain',
       identified_opportunity: 'Enterprise fleet dispatch optimization, multi-hub cross-docking automation, and real-time shipment status portal for tier-1 corporate clients.',
       recommended_solution: 'Custom Cloud Cross-Docking & Fleet Dispatch Platform',
+      confidence_level: 0.95,
       status: 'contacted',
-      evidence_snippets: ['Operates nationwide linehaul fleet', 'Handles 1M+ daily consignments', 'Legacy API bottleneck in third-party integrations'],
-      facts: ['Established in 2011', 'Publicly traded NSE/BSE logistics leader', 'Over 18,000 pin codes covered'],
-      confidence: 0.95,
     },
     {
-      id: 'l1000000-0000-0000-0000-000000000002',
+      id: 'be000000-0000-0000-0000-000000000002',
       company_id: 'c1000000-0000-0000-0000-000000000002',
-      primary_contact_id: 'ct100000-0000-0000-0000-000000000002',
+      primary_contact_id: 'cb000000-0000-0000-0000-000000000002',
       qualification_score: 88,
       qualification_level: 'high_priority',
       score_breakdown: {
@@ -288,17 +295,17 @@ async function main() {
         evidence_quality: 12,
         contact_reachability: 11,
       },
+      research_summary: 'Blue Dart operates scheduled cargo aircraft across India. Opportunity for automated Airway Bill document verification and customer self-service tracking.',
+      business_model: 'Scheduled Cargo Aviation & Express Air Freight',
       identified_opportunity: 'Next-generation Airway Bill self-service portal, automated customs clearance document verification, and mobile consignment tracking app.',
       recommended_solution: 'Automated Airway Bill Verification & Client Portal',
+      confidence_level: 0.92,
       status: 'meeting_requested',
-      evidence_snippets: ['Dedicated Boeing 757 cargo fleet', 'Handles critical pharma shipments', 'High volume of international customs clearances'],
-      facts: ['Part of DHL Group', 'Operates across 35,000+ Indian locations', 'Pioneer in express air distribution'],
-      confidence: 0.92,
     },
     {
-      id: 'l1000000-0000-0000-0000-000000000003',
+      id: 'be000000-0000-0000-0000-000000000003',
       company_id: 'c1000000-0000-0000-0000-000000000003',
-      primary_contact_id: 'ct100000-0000-0000-0000-000000000003',
+      primary_contact_id: 'cb000000-0000-0000-0000-000000000003',
       qualification_score: 85,
       qualification_level: 'high_priority',
       score_breakdown: {
@@ -308,17 +315,17 @@ async function main() {
         evidence_quality: 11,
         contact_reachability: 11,
       },
+      research_summary: 'Snowman Logistics operates 31 temperature-controlled cold warehouses across India with US-FDA pharma compliance requirements.',
+      business_model: 'Cold Chain Logistics & Temperature-Controlled Warehousing',
       identified_opportunity: 'IoT temperature logging integration, automated cold storage compliance audit reports, and pallet-level QR code tracking.',
       recommended_solution: 'Real-Time IoT Temperature Monitoring & Audit Portal',
+      confidence_level: 0.90,
       status: 'researched',
-      evidence_snippets: ['31 temperature-controlled warehouses', 'Over 100,000 pallet capacity', 'Mandatory US-FDA pharma compliance audits'],
-      facts: ['Operates in 15 key metropolitan cities', 'Specializes in -25C to +20C cold chains', 'BSE listed company'],
-      confidence: 0.9,
     },
     {
-      id: 'l1000000-0000-0000-0000-000000000004',
+      id: 'be000000-0000-0000-0000-000000000004',
       company_id: 'c1000000-0000-0000-0000-000000000004',
-      primary_contact_id: 'ct100000-0000-0000-0000-000000000004',
+      primary_contact_id: 'cb000000-0000-0000-0000-000000000004',
       qualification_score: 82,
       qualification_level: 'high_priority',
       score_breakdown: {
@@ -328,17 +335,17 @@ async function main() {
         evidence_quality: 11,
         contact_reachability: 10,
       },
+      research_summary: 'V-Trans manages over 1,500 trucks across 1,000+ branches. High reliance on physical paperwork creates opportunity for driver mobile apps.',
+      business_model: 'Surface Freight & Multi-Modal Container Logistics',
       identified_opportunity: 'Consignment booking API automation, electronic proof-of-delivery (e-POD) driver mobile application, and customer WhatsApp tracking bot.',
       recommended_solution: 'Driver e-POD Mobile App & Consignment API Gateway',
+      confidence_level: 0.88,
       status: 'discovered',
-      evidence_snippets: ['Over 1,500 company-owned and partner trucks', 'Multi-modal cargo movement', 'High reliance on paper delivery receipts'],
-      facts: ['Established in 1958', 'Network of 1,000+ branches', 'Annual turnover exceeding Rs 1,500 Crore'],
-      confidence: 0.88,
     },
     {
-      id: 'l1000000-0000-0000-0000-000000000005',
+      id: 'be000000-0000-0000-0000-000000000005',
       company_id: 'c1000000-0000-0000-0000-000000000005',
-      primary_contact_id: 'ct100000-0000-0000-0000-000000000005',
+      primary_contact_id: 'cb000000-0000-0000-0000-000000000005',
       qualification_score: 78,
       qualification_level: 'potential_prospect',
       score_breakdown: {
@@ -348,107 +355,152 @@ async function main() {
         evidence_quality: 11,
         contact_reachability: 10,
       },
+      research_summary: 'Taj Exotica Resort & Convention Centre Goa hosts major destination weddings and corporate summit conferences requiring digital guest concierge workflows.',
+      business_model: 'Luxury 5-Star Resort Hospitality & Convention Banqueting',
       identified_opportunity: 'Mobile guest concierge app, real-time in-resort experience bookings, and automated event coordination portal for corporate conferences.',
       recommended_solution: 'Custom Luxury Guest Concierge & Experience Booking App',
+      confidence_level: 0.85,
       status: 'interested',
-      evidence_snippets: ['High volume of destination weddings in Goa', 'Premium international and domestic clientele', 'Need for personalized guest itinerary management'],
-      facts: ['Part of IHCL Taj Hotels portfolio', 'Premier 5-star deluxe resort in South Goa', '140 luxury rooms and villas'],
-      confidence: 0.85,
     },
   ];
 
-  await supabase.from('leads').upsert(realLeads, { onConflict: 'id' });
-  console.log(`Inserted ${realLeads.length} real lead evaluations.`);
+  const { data: insertedLeads, error: leadErr } = await supabase
+    .from('leads')
+    .upsert(realLeads, { onConflict: 'id' })
+    .select();
 
-  // 5. Insert Real Opportunities & Deal Pipeline
+  if (leadErr) {
+    console.error('Error inserting leads:', leadErr);
+    return;
+  }
+  console.log(`Inserted ${insertedLeads.length} real lead evaluations.`);
+
+  // 5. Insert Real Opportunities & Deal Pipeline (hex UUIDs)
   console.log('Inserting CRM sales opportunities...');
   const realOpps = [
     {
-      id: 'op100000-0000-0000-0000-000000000001',
-      lead_id: 'l1000000-0000-0000-0000-000000000001',
+      id: 'ea000000-0000-0000-0000-000000000001',
+      lead_id: 'be000000-0000-0000-0000-000000000001',
       company_id: 'c1000000-0000-0000-0000-000000000001',
       title: 'Delhivery Cross-Docking & Fleet Telematics Platform',
       deal_value: 38000,
+      currency: 'USD',
       stage: 'negotiation',
       probability: 80,
       expected_close_date: new Date(Date.now() + 86400000 * 20).toISOString().slice(0, 10),
       next_action: 'Finalize technical milestone schedule and SLA contract with COO',
+      notes: 'COO approved technical architecture. Legal review of software development agreement underway.',
+      assigned_to: 'Vikram Mehta (Tech BD)',
     },
     {
-      id: 'op100000-0000-0000-0000-000000000002',
-      lead_id: 'l1000000-0000-0000-0000-000000000002',
+      id: 'ea000000-0000-0000-0000-000000000002',
+      lead_id: 'be000000-0000-0000-0000-000000000002',
       company_id: 'c1000000-0000-0000-0000-000000000002',
       title: 'Blue Dart Airway Tracking & Customer Self-Service Portal',
       deal_value: 24500,
+      currency: 'USD',
       stage: 'proposal_sent',
       probability: 60,
       expected_close_date: new Date(Date.now() + 86400000 * 30).toISOString().slice(0, 10),
       next_action: 'Follow up on commercial proposal sent to VP of Technology',
+      notes: 'VP of Airway Logistics requested dedicated client portal demo walkthrough.',
+      assigned_to: 'Vikram Mehta (Tech BD)',
     },
     {
-      id: 'op100000-0000-0000-0000-000000000003',
-      lead_id: 'l1000000-0000-0000-0000-000000000003',
+      id: 'ea000000-0000-0000-0000-000000000003',
+      lead_id: 'be000000-0000-0000-0000-000000000003',
       company_id: 'c1000000-0000-0000-0000-000000000003',
       title: 'Snowman Cold Chain IoT Temperature Logging System',
       deal_value: 18000,
+      currency: 'USD',
       stage: 'meeting_completed',
       probability: 50,
       expected_close_date: new Date(Date.now() + 86400000 * 45).toISOString().slice(0, 10),
       next_action: 'Draft architecture proposal for sensor data ingestion pipeline',
+      notes: 'Director of Cold Storage interested in eliminating manual temperature clipboard audits.',
+      assigned_to: 'Eleanor Vance (Sales Lead)',
     },
     {
-      id: 'op100000-0000-0000-0000-000000000004',
-      lead_id: 'l1000000-0000-0000-0000-000000000004',
+      id: 'ea000000-0000-0000-0000-000000000004',
+      lead_id: 'be000000-0000-0000-0000-000000000004',
       company_id: 'c1000000-0000-0000-0000-000000000004',
       title: 'V-Trans Driver Electronic Proof-of-Delivery App',
       deal_value: 14500,
+      currency: 'USD',
       stage: 'qualified',
       probability: 40,
       expected_close_date: new Date(Date.now() + 86400000 * 60).toISOString().slice(0, 10),
       next_action: 'Schedule discovery call with VP Fleet Operations',
+      notes: 'Opportunity verified. Preparing initial technical capabilities deck.',
+      assigned_to: 'Eleanor Vance (Sales Lead)',
     },
     {
-      id: 'op100000-0000-0000-0000-000000000005',
-      lead_id: 'l1000000-0000-0000-0000-000000000005',
+      id: 'ea000000-0000-0000-0000-000000000005',
+      lead_id: 'be000000-0000-0000-0000-000000000005',
       company_id: 'c1000000-0000-0000-0000-000000000005',
       title: 'Taj Goa Luxury Guest Concierge & Dining Portal',
       deal_value: 16500,
+      currency: 'USD',
       stage: 'won',
       probability: 100,
       expected_close_date: new Date().toISOString().slice(0, 10),
       next_action: 'Project kickoff sprint and design workshop scheduled in Goa',
+      notes: 'Commercial agreement executed. Engineering sprint begins this month.',
+      assigned_to: 'Vikram Mehta (Tech BD)',
     },
   ];
 
-  await supabase.from('opportunities').upsert(realOpps, { onConflict: 'id' });
-  console.log(`Inserted ${realOpps.length} CRM opportunities.`);
+  const { data: insertedOpps, error: oppErr } = await supabase
+    .from('opportunities')
+    .upsert(realOpps, { onConflict: 'id' })
+    .select();
+
+  if (oppErr) {
+    console.error('Error inserting opportunities:', oppErr);
+    return;
+  }
+  console.log(`Inserted ${insertedOpps.length} CRM opportunities.`);
 
   // 6. Insert Real Outreach Messages (Pending Approval & Sent)
   console.log('Inserting tailored outreach messages...');
   const realOutreach = [
     {
-      id: 'm1000000-0000-0000-0000-000000000001',
-      lead_id: 'l1000000-0000-0000-0000-000000000001',
-      contact_id: 'ct100000-0000-0000-0000-000000000001',
+      id: 'da000000-0000-0000-0000-000000000001',
+      lead_id: 'be000000-0000-0000-0000-000000000001',
+      contact_id: 'cb000000-0000-0000-0000-000000000001',
+      sequence_number: 0,
       subject: 'Modernizing cross-docking dispatch workflows at Delhivery',
       body: `Hi Rajesh,\n\nI noticed Delhivery's continued rapid expansion across linehaul hubs in South and West India. At Queenstown Labs, we engineer custom logistics software—specializing in high-throughput cross-docking dispatch and automated API gateways for enterprise freight.\n\nWe recently helped an express freight network cut consignment turnaround time by 34% by eliminating legacy dispatch paper bottlenecks.\n\nWould you be open to a 10-minute introductory call next Tuesday at 3:00 PM IST to explore how our software engineering team in Goa can support Delhivery's operations?\n\nBest regards,\nQueenstown Labs Engineering Team\nPanjim, Goa · India`,
+      personalisation_notes: 'Cited linehaul cross-docking automation and hub turnaround times.',
+      quality_score: 95,
       status: 'pending_approval',
-      sequence_number: 0,
+      scheduled_at: new Date(Date.now() - 3600000 * 30).toISOString(),
     },
     {
-      id: 'm1000000-0000-0000-0000-000000000002',
-      lead_id: 'l1000000-0000-0000-0000-000000000002',
-      contact_id: 'ct100000-0000-0000-0000-000000000002',
+      id: 'da000000-0000-0000-0000-000000000002',
+      lead_id: 'be000000-0000-0000-0000-000000000002',
+      contact_id: 'cb000000-0000-0000-0000-000000000002',
+      sequence_number: 0,
       subject: 'Automating airway bill compliance and customer tracking for Blue Dart',
       body: `Hi Sunil,\n\nWith Blue Dart managing extensive air-surface distribution across 35,000+ Indian locations, document verification speed is crucial for high-value freight.\n\nAt Queenstown Labs, our Goa software studio builds specialized logistics portals that automate customs documentation and give corporate shippers real-time milestone visibility without manual ticketing.\n\nCould we share a 3-minute video walkthrough of our dispatch architecture with your technology team this week?\n\nBest regards,\nQueenstown Labs Team`,
+      personalisation_notes: 'Addresses 35,000+ location airway bill verification and tracking portals.',
+      quality_score: 93,
       status: 'sent',
-      sequence_number: 0,
+      scheduled_at: new Date(Date.now() - 3600000 * 55).toISOString(),
       sent_at: new Date(Date.now() - 86400000 * 2).toISOString(),
     },
   ];
 
-  await supabase.from('outreach_messages').upsert(realOutreach, { onConflict: 'id' });
-  console.log(`Inserted ${realOutreach.length} outreach drafts.`);
+  const { data: insertedOutreach, error: outErr } = await supabase
+    .from('outreach_messages')
+    .upsert(realOutreach, { onConflict: 'id' })
+    .select();
+
+  if (outErr) {
+    console.error('Error inserting outreach messages:', outErr);
+    return;
+  }
+  console.log(`Inserted ${insertedOutreach.length} outreach drafts.`);
 
   console.log('✅ Real enterprise dataset successfully populated in Supabase!');
 }

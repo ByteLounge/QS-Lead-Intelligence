@@ -139,7 +139,7 @@ const DEMO_COMPANIES: Company[] = [
 
 const DEMO_CONTACTS: Contact[] = [
   {
-    id: 'ct100000-0000-0000-0000-000000000001',
+    id: 'cb000000-0000-0000-0000-000000000001',
     company_id: 'c1000000-0000-0000-0000-000000000001',
     full_name: 'Rajesh Sharma',
     email: 'r.sharma@delhivery.com',
@@ -155,7 +155,7 @@ const DEMO_CONTACTS: Contact[] = [
     company: DEMO_COMPANIES[0],
   },
   {
-    id: 'ct100000-0000-0000-0000-000000000002',
+    id: 'cb000000-0000-0000-0000-000000000002',
     company_id: 'c1000000-0000-0000-0000-000000000002',
     full_name: 'Sunil Kulkarni',
     email: 's.kulkarni@bluedart.com',
@@ -171,7 +171,7 @@ const DEMO_CONTACTS: Contact[] = [
     company: DEMO_COMPANIES[1],
   },
   {
-    id: 'ct100000-0000-0000-0000-000000000003',
+    id: 'cb000000-0000-0000-0000-000000000003',
     company_id: 'c1000000-0000-0000-0000-000000000003',
     full_name: 'Pooja Hegde',
     email: 'p.hegde@snowman.in',
@@ -187,14 +187,14 @@ const DEMO_CONTACTS: Contact[] = [
     company: DEMO_COMPANIES[2],
   },
   {
-    id: 'ct100000-0000-0000-0000-000000000004',
+    id: 'cb000000-0000-0000-0000-000000000004',
     company_id: 'c1000000-0000-0000-0000-000000000004',
     full_name: 'Mahendra Shah',
     email: 'm.shah@vtransgroup.com',
     normalized_email: 'm.shah@vtransgroup.com',
     job_title: 'VP Fleet Telematics & Digital Operations',
     country: 'India',
-    source_url: 'https://www.vtransgroup.com/leadership',
+    source_url: 'https://vtransgroup.com/leadership',
     source_type: 'website',
     verification_status: 'valid',
     marketing_eligibility_status: 'eligible',
@@ -203,7 +203,7 @@ const DEMO_CONTACTS: Contact[] = [
     company: DEMO_COMPANIES[3],
   },
   {
-    id: 'ct100000-0000-0000-0000-000000000005',
+    id: 'cb000000-0000-0000-0000-000000000005',
     company_id: 'c1000000-0000-0000-0000-000000000005',
     full_name: "Armaan D'Souza",
     email: 'a.dsouza@tajhotels.com',
@@ -222,9 +222,9 @@ const DEMO_CONTACTS: Contact[] = [
 
 const DEMO_LEADS: Lead[] = [
   {
-    id: 'l1000000-0000-0000-0000-000000000001',
+    id: 'be000000-0000-0000-0000-000000000001',
     company_id: 'c1000000-0000-0000-0000-000000000001',
-    primary_contact_id: 'ct100000-0000-0000-0000-000000000001',
+    primary_contact_id: 'cb000000-0000-0000-0000-000000000001',
     qualification_score: 92,
     qualification_level: 'high_priority',
     score_breakdown: {
@@ -246,9 +246,9 @@ const DEMO_LEADS: Lead[] = [
     primary_contact: DEMO_CONTACTS[0],
   },
   {
-    id: 'l1000000-0000-0000-0000-000000000002',
+    id: 'be000000-0000-0000-0000-000000000002',
     company_id: 'c1000000-0000-0000-0000-000000000002',
-    primary_contact_id: 'ct100000-0000-0000-0000-000000000002',
+    primary_contact_id: 'cb000000-0000-0000-0000-000000000002',
     qualification_score: 88,
     qualification_level: 'high_priority',
     score_breakdown: {
@@ -270,9 +270,9 @@ const DEMO_LEADS: Lead[] = [
     primary_contact: DEMO_CONTACTS[1],
   },
   {
-    id: 'l1000000-0000-0000-0000-000000000003',
+    id: 'be000000-0000-0000-0000-000000000003',
     company_id: 'c1000000-0000-0000-0000-000000000003',
-    primary_contact_id: 'ct100000-0000-0000-0000-000000000003',
+    primary_contact_id: 'cb000000-0000-0000-0000-000000000003',
     qualification_score: 85,
     qualification_level: 'high_priority',
     score_breakdown: {
@@ -294,9 +294,9 @@ const DEMO_LEADS: Lead[] = [
     primary_contact: DEMO_CONTACTS[2],
   },
   {
-    id: 'l1000000-0000-0000-0000-000000000004',
+    id: 'be000000-0000-0000-0000-000000000004',
     company_id: 'c1000000-0000-0000-0000-000000000004',
-    primary_contact_id: 'ct100000-0000-0000-0000-000000000004',
+    primary_contact_id: 'cb000000-0000-0000-0000-000000000004',
     qualification_score: 82,
     qualification_level: 'high_priority',
     score_breakdown: {
@@ -318,9 +318,9 @@ const DEMO_LEADS: Lead[] = [
     primary_contact: DEMO_CONTACTS[3],
   },
   {
-    id: 'l1000000-0000-0000-0000-000000000005',
+    id: 'be000000-0000-0000-0000-000000000005',
     company_id: 'c1000000-0000-0000-0000-000000000005',
-    primary_contact_id: 'ct100000-0000-0000-0000-000000000005',
+    primary_contact_id: 'cb000000-0000-0000-0000-000000000005',
     qualification_score: 78,
     qualification_level: 'potential_prospect',
     score_breakdown: {
@@ -345,8 +345,8 @@ const DEMO_LEADS: Lead[] = [
 
 const DEMO_OPPORTUNITIES: Opportunity[] = [
   {
-    id: 'op100000-0000-0000-0000-000000000001',
-    lead_id: 'l1000000-0000-0000-0000-000000000001',
+    id: 'ea000000-0000-0000-0000-000000000001',
+    lead_id: 'be000000-0000-0000-0000-000000000001',
     company_id: 'c1000000-0000-0000-0000-000000000001',
     title: 'Delhivery Cross-Docking & Fleet Telematics Platform',
     stage: 'negotiation',
@@ -363,8 +363,8 @@ const DEMO_OPPORTUNITIES: Opportunity[] = [
     company: DEMO_COMPANIES[0],
   },
   {
-    id: 'op100000-0000-0000-0000-000000000002',
-    lead_id: 'l1000000-0000-0000-0000-000000000002',
+    id: 'ea000000-0000-0000-0000-000000000002',
+    lead_id: 'be000000-0000-0000-0000-000000000002',
     company_id: 'c1000000-0000-0000-0000-000000000002',
     title: 'Blue Dart Airway Tracking & Customer Self-Service Portal',
     stage: 'proposal_sent',
@@ -381,8 +381,8 @@ const DEMO_OPPORTUNITIES: Opportunity[] = [
     company: DEMO_COMPANIES[1],
   },
   {
-    id: 'op100000-0000-0000-0000-000000000003',
-    lead_id: 'l1000000-0000-0000-0000-000000000003',
+    id: 'ea000000-0000-0000-0000-000000000003',
+    lead_id: 'be000000-0000-0000-0000-000000000003',
     company_id: 'c1000000-0000-0000-0000-000000000003',
     title: 'Snowman Cold Chain IoT Temperature Logging System',
     stage: 'meeting_completed',
@@ -399,8 +399,8 @@ const DEMO_OPPORTUNITIES: Opportunity[] = [
     company: DEMO_COMPANIES[2],
   },
   {
-    id: 'op100000-0000-0000-0000-000000000004',
-    lead_id: 'l1000000-0000-0000-0000-000000000004',
+    id: 'ea000000-0000-0000-0000-000000000004',
+    lead_id: 'be000000-0000-0000-0000-000000000004',
     company_id: 'c1000000-0000-0000-0000-000000000004',
     title: 'V-Trans Driver Electronic Proof-of-Delivery App',
     stage: 'qualified',
@@ -417,8 +417,8 @@ const DEMO_OPPORTUNITIES: Opportunity[] = [
     company: DEMO_COMPANIES[3],
   },
   {
-    id: 'op100000-0000-0000-0000-000000000005',
-    lead_id: 'l1000000-0000-0000-0000-000000000005',
+    id: 'ea000000-0000-0000-0000-000000000005',
+    lead_id: 'be000000-0000-0000-0000-000000000005',
     company_id: 'c1000000-0000-0000-0000-000000000005',
     title: 'Taj Goa Luxury Guest Concierge & Dining Portal',
     stage: 'won',
@@ -438,9 +438,9 @@ const DEMO_OPPORTUNITIES: Opportunity[] = [
 
 const DEMO_OUTREACH: OutreachMessage[] = [
   {
-    id: 'm1000000-0000-0000-0000-000000000001',
-    lead_id: 'l1000000-0000-0000-0000-000000000001',
-    contact_id: 'ct100000-0000-0000-0000-000000000001',
+    id: 'da000000-0000-0000-0000-000000000001',
+    lead_id: 'be000000-0000-0000-0000-000000000001',
+    contact_id: 'cb000000-0000-0000-0000-000000000001',
     sequence_number: 0,
     subject: 'Modernizing cross-docking dispatch workflows at Delhivery',
     body: `Hi Rajesh,\n\nI noticed Delhivery's continued rapid expansion across linehaul hubs in South and West India. At Queenstown Labs, we engineer custom logistics software—specializing in high-throughput cross-docking dispatch and automated API gateways for enterprise freight.\n\nWe recently helped an express freight network cut consignment turnaround time by 34% by eliminating legacy dispatch paper bottlenecks.\n\nWould you be open to a 10-minute introductory call next Tuesday at 3:00 PM IST to explore how our software engineering team in Goa can support Delhivery's operations?\n\nBest regards,\nQueenstown Labs Engineering Team\nPanjim, Goa · India`,
@@ -456,9 +456,9 @@ const DEMO_OUTREACH: OutreachMessage[] = [
     lead: DEMO_LEADS[0],
   },
   {
-    id: 'm1000000-0000-0000-0000-000000000002',
-    lead_id: 'l1000000-0000-0000-0000-000000000002',
-    contact_id: 'ct100000-0000-0000-0000-000000000002',
+    id: 'da000000-0000-0000-0000-000000000002',
+    lead_id: 'be000000-0000-0000-0000-000000000002',
+    contact_id: 'cb000000-0000-0000-0000-000000000002',
     sequence_number: 0,
     subject: 'Automating airway bill compliance and customer tracking for Blue Dart',
     body: `Hi Sunil,\n\nWith Blue Dart managing extensive air-surface distribution across 35,000+ Indian locations, document verification speed is crucial for high-value freight.\n\nAt Queenstown Labs, our Goa software studio builds specialized logistics portals that automate customs documentation and give corporate shippers real-time milestone visibility without manual ticketing.\n\nCould we share a 3-minute video walkthrough of our dispatch architecture with your technology team this week?\n\nBest regards,\nQueenstown Labs Team`,
@@ -477,9 +477,9 @@ const DEMO_OUTREACH: OutreachMessage[] = [
 
 const DEMO_REPLIES: EmailReply[] = [
   {
-    id: 'rep10000-0000-0000-0000-000000000001',
-    outreach_message_id: 'm1000000-0000-0000-0000-000000000002',
-    contact_id: 'ct100000-0000-0000-0000-000000000002',
+    id: 'fa000000-0000-0000-0000-000000000001',
+    outreach_message_id: 'da000000-0000-0000-0000-000000000002',
+    contact_id: 'cb000000-0000-0000-0000-000000000002',
     from_email: 's.kulkarni@bluedart.com',
     subject: 'Re: Automating airway bill compliance and customer tracking for Blue Dart',
     body: 'Hi, thanks for reaching out. We are actually exploring a refresh of our corporate tracking API and airway bill reconciliation. Can your team share a brief architecture brief and hop on a call this Thursday at 3 PM?',
@@ -493,9 +493,9 @@ const DEMO_REPLIES: EmailReply[] = [
     contact: DEMO_CONTACTS[1],
   },
   {
-    id: 'rep10000-0000-0000-0000-000000000002',
-    outreach_message_id: 'm1000000-0000-0000-0000-000000000001',
-    contact_id: 'ct100000-0000-0000-0000-000000000001',
+    id: 'fa000000-0000-0000-0000-000000000002',
+    outreach_message_id: 'da000000-0000-0000-0000-000000000001',
+    contact_id: 'cb000000-0000-0000-0000-000000000001',
     from_email: 'r.sharma@delhivery.com',
     subject: 'Re: Modernizing cross-docking dispatch workflows at Delhivery',
     body: 'Interesting timing. Could you send over a brief PDF overview or scope of what your cross-docking platform entails? If it looks promising we can arrange a call with our IT operations manager.',
@@ -516,7 +516,7 @@ const DEMO_ACTIVITIES: Activity[] = [
     activity_type: 'reply_received',
     title: 'Meeting Requested by Sunil Kulkarni (Blue Dart)',
     description: 'VP of Airway Logistics requested technical exchange call regarding corporate tracking API.',
-    metadata: { classification: 'meeting_request', lead_id: 'l1000000-0000-0000-0000-000000000002' },
+    metadata: { classification: 'meeting_request', lead_id: 'be000000-0000-0000-0000-000000000002' },
     created_by: 'system',
     created_at: new Date(Date.now() - 3600000 * 16).toISOString(),
   },
@@ -525,7 +525,7 @@ const DEMO_ACTIVITIES: Activity[] = [
     activity_type: 'email_sent',
     title: 'Intro Outreach Sent to Delhivery COO',
     description: 'Delivered tailored logistics engineering intro to r.sharma@delhivery.com',
-    metadata: { outreach_id: 'm1000000-0000-0000-0000-000000000001' },
+    metadata: { outreach_id: 'da000000-0000-0000-0000-000000000001' },
     created_by: 'system',
     created_at: new Date(Date.now() - 3600000 * 28).toISOString(),
   },
