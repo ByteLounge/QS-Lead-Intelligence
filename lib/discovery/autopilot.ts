@@ -92,7 +92,7 @@ export async function handleAutopilotDiscovery(req?: NextRequest) {
       country: target.country,
       city: target.city,
       industry: target.industry,
-      maxResults: 6,
+      maxResults: 2,
     });
 
     let newlyInsertedCount = 0;
@@ -132,7 +132,7 @@ export async function handleAutopilotDiscovery(req?: NextRequest) {
       let siteText = comp.description || '';
       if (comp.website) {
         try {
-          const scraped = await fetchAndExtractWebContent(comp.website);
+          const scraped = await fetchAndExtractWebContent(comp.website, 2000);
           if (scraped.content) {
             siteText = `${scraped.title}\n${scraped.metaDescription}\n${scraped.content}`;
           }
