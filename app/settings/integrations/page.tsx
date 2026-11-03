@@ -170,13 +170,13 @@ export default function IntegrationsSettingsPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl min-w-0">
           {/* Sub Navigation Header */}
           <div>
-            <div className="flex items-center space-x-2 text-xs border-b border-slate-200 pb-3 mb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:space-x-2 text-xs border-b border-slate-200 pb-3 mb-4">
               <Link
                 href="/settings/compliance"
-                className="text-slate-500 hover:text-slate-800 font-medium px-3"
+                className="text-slate-500 hover:text-slate-800 font-medium px-2 sm:px-3"
               >
                 Compliance &amp; Safeguards
               </Link>
@@ -188,7 +188,7 @@ export default function IntegrationsSettingsPage() {
               </Link>
               <Link
                 href="/settings/team"
-                className="text-slate-500 hover:text-slate-800 font-medium px-3"
+                className="text-slate-500 hover:text-slate-800 font-medium px-2 sm:px-3"
               >
                 Team &amp; Access Control
               </Link>

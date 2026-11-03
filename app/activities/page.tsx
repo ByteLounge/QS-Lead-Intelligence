@@ -51,7 +51,7 @@ export default function ActivitiesPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-4xl">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-4xl min-w-0">
           <div className="space-y-1 pb-2 border-b border-[#e8e8e8]">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
               <History className="h-3 w-3 text-[#111111]" />
@@ -65,7 +65,7 @@ export default function ActivitiesPage() {
             </p>
           </div>
 
-          <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] p-6">
+          <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] p-4 sm:p-6">
             {loading ? (
               <div className="py-12 text-center text-slate-400 text-xs">
                 <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-500" />
@@ -83,10 +83,10 @@ export default function ActivitiesPage() {
                     <div className="p-2 rounded-full bg-slate-100 flex-shrink-0 mt-0.5">
                       {getIcon(act.activity_type)}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-slate-900">{act.title}</span>
-                        <span className="text-[10px] text-slate-400">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-0.5 sm:gap-2">
+                        <span className="font-semibold text-slate-900 truncate">{act.title}</span>
+                        <span className="text-[10px] text-slate-400 shrink-0">
                           {new Date(act.created_at).toLocaleString()}
                         </span>
                       </div>

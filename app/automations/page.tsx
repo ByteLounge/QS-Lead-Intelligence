@@ -107,7 +107,7 @@ export default function AutomationsPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-8 overflow-y-auto hairline-grid-subtle max-w-5xl">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 overflow-y-auto hairline-grid-subtle max-w-5xl min-w-0">
           {/* Header */}
           <div className="space-y-1.5 pb-2 border-b border-[#e8e8e8]">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666] shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
@@ -123,10 +123,10 @@ export default function AutomationsPage() {
           </div>
 
           {/* Autopilot Overview Banner */}
-          <div className="p-6 bg-[#111111] text-white rounded-2xl shadow-[0_4px_24px_-6px_rgba(17,17,17,0.25)] space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-6 bg-[#111111] text-white rounded-2xl shadow-[0_4px_24px_-6px_rgba(17,17,17,0.25)] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400">
+                <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 shrink-0">
                   <Cpu className="h-4 w-4" />
                 </div>
                 <div>
@@ -138,7 +138,7 @@ export default function AutomationsPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 self-start sm:self-auto">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>AUTOPILOT ONLINE</span>
               </div>

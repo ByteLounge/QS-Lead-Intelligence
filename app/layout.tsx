@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Inter_Tight } from 'next/font/google';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/toast';
+import { MobileNavProvider } from '@/components/layout/mobile-nav-context';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
       <body className="antialiased min-h-screen bg-[#fafafa] text-[#111111]">
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <MobileNavProvider>{children}</MobileNavProvider>
+        </ToastProvider>
       </body>
     </html>
   );

@@ -89,7 +89,7 @@ export default function LeadsPage() {
           onOpenNewLead={() => setIsCreateCompanyOpen(true)}
         />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle min-w-0">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
             <div className="space-y-1">
@@ -104,7 +104,7 @@ export default function LeadsPage() {
                 Objective 100-point Gemini AI qualification scoring and detected software modernization opportunities.
               </p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -126,9 +126,9 @@ export default function LeadsPage() {
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
-            <div className="flex items-center space-x-2.5 flex-1 min-w-[240px]">
-              <Search className="h-4 w-4 text-[#888888]" />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
+            <div className="flex items-center space-x-2.5 flex-1 min-w-0">
+              <Search className="h-4 w-4 text-[#888888] shrink-0" />
               <input
                 type="text"
                 placeholder="Search leads by company, opportunity, solution..."
@@ -138,7 +138,7 @@ export default function LeadsPage() {
               />
             </div>
 
-            <div className="flex items-center space-x-3 text-xs">
+            <div className="flex flex-wrap items-center gap-2.5 text-xs">
               <div className="flex items-center space-x-1.5">
                 <span className="text-[#777777] font-mono text-[10px] uppercase">Tier:</span>
                 <select

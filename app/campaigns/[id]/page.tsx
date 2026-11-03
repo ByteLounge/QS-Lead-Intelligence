@@ -21,7 +21,7 @@ export default function CampaignDetailPage() {
       <div className="flex-1 flex flex-col min-w-0">
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle min-w-0">
           <Link
             href="/campaigns"
             className="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 font-medium"

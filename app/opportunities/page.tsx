@@ -96,7 +96,7 @@ export default function OpportunitiesPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle min-w-0">
           {/* Header & Stats Banner */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
             <div className="space-y-1">
@@ -112,18 +112,18 @@ export default function OpportunitiesPage() {
               </p>
             </div>
 
-            <div className="flex items-center space-x-3 text-xs bg-white p-2.5 border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
-              <div className="px-3 border-r border-[#e8e8e8]">
-                <span className="text-[10px] font-mono uppercase text-[#888888] block">Active Pipeline</span>
-                <span className="text-sm font-semibold text-[#111111] font-display">${totalPipeline.toLocaleString()}</span>
+            <div className="grid grid-cols-3 sm:flex items-center gap-2 sm:space-x-3 text-xs bg-white p-2 sm:p-2.5 border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
+              <div className="px-1.5 sm:px-3 border-r border-[#e8e8e8]">
+                <span className="text-[9px] sm:text-[10px] font-mono uppercase text-[#888888] block truncate">Active Pipeline</span>
+                <span className="text-xs sm:text-sm font-semibold text-[#111111] font-display">${totalPipeline.toLocaleString()}</span>
               </div>
-              <div className="px-3 border-r border-[#e8e8e8]">
-                <span className="text-[10px] font-mono uppercase text-[#888888] block">Won Revenue</span>
-                <span className="text-sm font-semibold text-emerald-700 font-display">${wonTotal.toLocaleString()}</span>
+              <div className="px-1.5 sm:px-3 border-r border-[#e8e8e8]">
+                <span className="text-[9px] sm:text-[10px] font-mono uppercase text-[#888888] block truncate">Won Revenue</span>
+                <span className="text-xs sm:text-sm font-semibold text-emerald-700 font-display">${wonTotal.toLocaleString()}</span>
               </div>
-              <div className="px-3">
-                <span className="text-[10px] font-mono uppercase text-[#888888] block">Meeting Requests</span>
-                <span className="text-sm font-semibold text-[#111111] font-display">{activeMeetingDeals}</span>
+              <div className="px-1.5 sm:px-3">
+                <span className="text-[9px] sm:text-[10px] font-mono uppercase text-[#888888] block truncate">Meetings</span>
+                <span className="text-xs sm:text-sm font-semibold text-[#111111] font-display">{activeMeetingDeals}</span>
               </div>
             </div>
           </div>

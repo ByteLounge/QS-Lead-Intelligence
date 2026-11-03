@@ -143,7 +143,7 @@ export default function DashboardPage() {
           onOpenNewLead={() => setIsCreateCompanyOpen(true)}
         />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-8 overflow-y-auto hairline-grid-subtle">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 overflow-y-auto hairline-grid-subtle min-w-0">
           {/* Studio Header Section */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
             <div className="space-y-1.5">
@@ -159,7 +159,7 @@ export default function DashboardPage() {
               </p>
             </div>
             
-            <div className="flex items-center space-x-2.5">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               <Button
                 variant="outline"
                 size="sm"
@@ -190,134 +190,134 @@ export default function DashboardPage() {
           </div>
 
           {/* KPI Cards Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Discovered</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.totalCompanies || 0}</p>
-                  <p className="text-[10px] text-[#888888] mt-0.5">Target Businesses</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Discovered</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.totalCompanies || 0}</p>
+                  <p className="text-[10px] text-[#888888] mt-0.5 truncate">Target Businesses</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-[#f5f5f5] border border-[#e8e8e8] flex items-center justify-center text-[#111111]">
+                <div className="w-8 h-8 rounded-xl bg-[#f5f5f5] border border-[#e8e8e8] flex items-center justify-center text-[#111111] shrink-0">
                   <Building2 className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Qualified</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.qualifiedLeads || 0}</p>
-                  <p className="text-[10px] text-emerald-600 font-medium mt-0.5">Score ≥ 60</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Qualified</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.qualifiedLeads || 0}</p>
+                  <p className="text-[10px] text-emerald-600 font-medium mt-0.5 truncate">Score ≥ 60</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                   <Target className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">High Priority</p>
-                  <p className="text-2xl font-semibold text-emerald-600 mt-0.5 font-display">{kpis.highPriorityLeads || 0}</p>
-                  <p className="text-[10px] text-emerald-700 font-semibold mt-0.5">Score ≥ 80</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">High Priority</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-emerald-600 mt-0.5 font-display">{kpis.highPriorityLeads || 0}</p>
+                  <p className="text-[10px] text-emerald-700 font-semibold mt-0.5 truncate">Score ≥ 80</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-emerald-100/70 border border-emerald-200 flex items-center justify-center text-emerald-800">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100/70 border border-emerald-200 flex items-center justify-center text-emerald-800 shrink-0">
                   <Sparkles className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Contacts</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.totalContacts || 0}</p>
-                  <p className="text-[10px] text-[#888888] mt-0.5">Stakeholders</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Contacts</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.totalContacts || 0}</p>
+                  <p className="text-[10px] text-[#888888] mt-0.5 truncate">Stakeholders</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-[#f5f5f5] border border-[#e8e8e8] flex items-center justify-center text-[#111111]">
+                <div className="w-8 h-8 rounded-xl bg-[#f5f5f5] border border-[#e8e8e8] flex items-center justify-center text-[#111111] shrink-0">
                   <Users className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Outreach Sent</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.emailsSent || 0}</p>
-                  <p className="text-[10px] text-[#888888] mt-0.5">Delivered</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Outreach Sent</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.emailsSent || 0}</p>
+                  <p className="text-[10px] text-[#888888] mt-0.5 truncate">Delivered</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-[#f5f5f5] border border-[#e8e8e8] flex items-center justify-center text-[#111111]">
+                <div className="w-8 h-8 rounded-xl bg-[#f5f5f5] border border-[#e8e8e8] flex items-center justify-center text-[#111111] shrink-0">
                   <Send className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Replies</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.totalReplies || 0}</p>
-                  <p className="text-[10px] text-[#888888] mt-0.5">Inbound Notes</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Replies</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.totalReplies || 0}</p>
+                  <p className="text-[10px] text-[#888888] mt-0.5 truncate">Inbound Notes</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
                   <MessageSquare className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Interested</p>
-                  <p className="text-2xl font-semibold text-emerald-700 mt-0.5 font-display">{kpis.interestedProspects || 0}</p>
-                  <p className="text-[10px] text-emerald-600 mt-0.5">Warm Engagement</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Interested</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-emerald-700 mt-0.5 font-display">{kpis.interestedProspects || 0}</p>
+                  <p className="text-[10px] text-emerald-600 mt-0.5 truncate">Warm Pipeline</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
                   <Flame className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Meetings</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.meetingsRequested || 0}</p>
-                  <p className="text-[10px] text-[#666666] mt-0.5">High Intent Calls</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Meetings</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.meetingsRequested || 0}</p>
+                  <p className="text-[10px] text-[#666666] mt-0.5 truncate">High Intent Calls</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-700">
+                <div className="w-8 h-8 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-700 shrink-0">
                   <Calendar className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Deals Won</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.dealsWon || 0}</p>
-                  <p className="text-[10px] text-[#888888] mt-0.5">Converted Accounts</p>
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Deals Won</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">{kpis.dealsWon || 0}</p>
+                  <p className="text-[10px] text-[#888888] mt-0.5 truncate">Converted Accounts</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-700">
+                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-700 shrink-0">
                   <Trophy className="h-4 w-4" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="hover:border-[#cfcfcf] transition-all">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777]">Pipeline Value</p>
-                  <p className="text-2xl font-semibold text-[#111111] mt-0.5 font-display">
+              <CardContent className="p-3 sm:p-4 flex items-center justify-between">
+                <div className="min-w-0 pr-1">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#777777] truncate">Pipeline Value</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-[#111111] mt-0.5 font-display">
                     ${Number(kpis.estimatedPipelineValue || 0).toLocaleString()}
                   </p>
-                  <p className="text-[10px] text-[#888888] mt-0.5">Active Opportunities</p>
+                  <p className="text-[10px] text-[#888888] mt-0.5 truncate">Active Opportunities</p>
                 </div>
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                   <DollarSign className="h-4 w-4" />
                 </div>
               </CardContent>
@@ -344,11 +344,11 @@ export default function DashboardPage() {
                     <BarChart
                       data={charts.conversionFunnel || []}
                       layout="vertical"
-                      margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+                      margin={{ top: 5, right: 15, left: 10, bottom: 5 }}
                     >
                       <CartesianGrid strokeDasharray="2 2" horizontal={false} stroke="#e8e8e8" />
                       <XAxis type="number" tick={{ fontSize: 10, fill: '#666666' }} />
-                      <YAxis type="category" dataKey="stage" tick={{ fontSize: 11, fill: '#111111' }} width={120} />
+                      <YAxis type="category" dataKey="stage" tick={{ fontSize: 10, fill: '#111111' }} width={90} />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: '#ffffff',
@@ -400,10 +400,10 @@ export default function DashboardPage() {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="w-full grid grid-cols-2 gap-2 text-[11px] text-[#555555] mt-2 pt-2 border-t border-[#f0f0f0]">
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 text-[11px] text-[#555555] mt-2 pt-2 border-t border-[#f0f0f0]">
                   {(charts.qualificationDistribution || []).map((item: any, idx: number) => (
                     <div key={idx} className="flex items-center space-x-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
                       <span className="truncate">{item.name}: <strong className="text-[#111111]">{item.value}</strong></span>
                     </div>
                   ))}
@@ -422,7 +422,7 @@ export default function DashboardPage() {
               <CardContent className="pt-6">
                 <div className="h-56 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={charts.leadsByCountry || []}>
+                    <BarChart data={charts.leadsByCountry || []} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#e8e8e8" />
                       <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#666666' }} />
                       <YAxis tick={{ fontSize: 10, fill: '#666666' }} />
@@ -450,7 +450,7 @@ export default function DashboardPage() {
               <CardContent className="pt-6">
                 <div className="h-56 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={charts.acquisitionOverTime || []}>
+                    <LineChart data={charts.acquisitionOverTime || []} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="#e8e8e8" />
                       <XAxis dataKey="day" tick={{ fontSize: 10, fill: '#666666' }} />
                       <YAxis tick={{ fontSize: 10, fill: '#666666' }} />
@@ -604,7 +604,7 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="pt-5">
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3 text-xs">
                 <div className="p-3.5 rounded-xl border border-[#e8e8e8] bg-white flex items-center justify-between hover:border-[#cfcfcf] transition-all">
                   <div>
                     <p className="font-medium text-[#111111]">Supabase PostgreSQL</p>

@@ -48,7 +48,7 @@ export default function AnalyticsPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-8 overflow-y-auto hairline-grid-subtle">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 overflow-y-auto hairline-grid-subtle min-w-0">
           <div className="space-y-1 pb-2 border-b border-[#e8e8e8]">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
               <BarChart3 className="h-3 w-3 text-[#111111]" />
@@ -74,11 +74,11 @@ export default function AnalyticsPage() {
                     <BarChart
                       data={charts.conversionFunnel || []}
                       layout="vertical"
-                      margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+                      margin={{ top: 5, right: 15, left: 10, bottom: 5 }}
                     >
                       <CartesianGrid strokeDasharray="2 2" horizontal={false} stroke="#e8e8e8" />
                       <XAxis type="number" tick={{ fontSize: 10, fill: '#666666' }} />
-                      <YAxis type="category" dataKey="stage" tick={{ fontSize: 11, fill: '#111111' }} width={120} />
+                      <YAxis type="category" dataKey="stage" tick={{ fontSize: 10, fill: '#111111' }} width={90} />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: '#ffffff',
@@ -133,7 +133,7 @@ export default function AnalyticsPage() {
               <CardContent className="pt-2">
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={charts.leadsByCountry || []}>
+                    <BarChart data={charts.leadsByCountry || []} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                       <XAxis dataKey="name" tick={{ fontSize: 10 }} />
                       <YAxis tick={{ fontSize: 10 }} />
@@ -147,13 +147,13 @@ export default function AnalyticsPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle>Discovery & Outreach Velocity</CardTitle>
+                <CardTitle>Discovery &amp; Outreach Velocity</CardTitle>
                 <p className="text-xs text-slate-400">Acquisition vs. outreach volume trends</p>
               </CardHeader>
               <CardContent className="pt-2">
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={charts.acquisitionOverTime || []}>
+                    <LineChart data={charts.acquisitionOverTime || []} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                       <XAxis dataKey="day" tick={{ fontSize: 10 }} />
                       <YAxis tick={{ fontSize: 10 }} />

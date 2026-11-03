@@ -155,7 +155,7 @@ export default function EmailApprovalsPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl min-w-0">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
             <div className="space-y-1">
@@ -277,8 +277,8 @@ export default function EmailApprovalsPage() {
                     )}
 
                     {/* Footer Actions */}
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                      <div className="flex space-x-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-100">
+                      <div className="flex flex-wrap items-center gap-2">
                         {isEditing ? (
                           <Button
                             variant="outline"
@@ -311,7 +311,7 @@ export default function EmailApprovalsPage() {
                         </Button>
                       </div>
 
-                      <div className="flex space-x-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <Button
                           variant="outline"
                           size="sm"

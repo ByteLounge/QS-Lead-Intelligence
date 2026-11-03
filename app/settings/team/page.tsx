@@ -36,19 +36,19 @@ export default function TeamSettingsPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl min-w-0">
           {/* Sub Navigation Header */}
           <div>
-            <div className="flex items-center space-x-2 text-xs border-b border-slate-200 pb-3 mb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:space-x-2 text-xs border-b border-slate-200 pb-3 mb-4">
               <Link
                 href="/settings/compliance"
-                className="text-slate-500 hover:text-slate-800 font-medium px-3"
+                className="text-slate-500 hover:text-slate-800 font-medium px-2 sm:px-3"
               >
                 Compliance &amp; Safeguards
               </Link>
               <Link
                 href="/settings/integrations"
-                className="text-slate-500 hover:text-slate-800 font-medium px-3"
+                className="text-slate-500 hover:text-slate-800 font-medium px-2 sm:px-3"
               >
                 API Integrations
               </Link>
@@ -72,8 +72,8 @@ export default function TeamSettingsPage() {
               <CardTitle>Authorized Team Members</CardTitle>
             </CardHeader>
             <CardContent className="pt-2 text-xs">
-              <div className="border border-slate-200 rounded overflow-hidden">
-                <table className="w-full text-left">
+              <div className="border border-slate-200 rounded overflow-x-auto">
+                <table className="w-full text-left min-w-[500px]">
                   <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold text-[10px] uppercase">
                     <tr>
                       <th className="p-3">Member Name</th>
@@ -108,8 +108,8 @@ export default function TeamSettingsPage() {
               <p className="text-xs text-slate-400">Enforced by Supabase Row Level Security and API route guards</p>
             </CardHeader>
             <CardContent className="pt-2 text-xs">
-              <div className="border border-slate-200 rounded overflow-hidden">
-                <table className="w-full text-left">
+              <div className="border border-slate-200 rounded overflow-x-auto">
+                <table className="w-full text-left min-w-[500px]">
                   <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold text-[10px] uppercase">
                     <tr>
                       <th className="p-2.5">System Capability</th>

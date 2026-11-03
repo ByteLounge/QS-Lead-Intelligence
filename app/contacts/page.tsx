@@ -118,7 +118,7 @@ export default function ContactsPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle min-w-0">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
             <div className="space-y-1">
@@ -136,7 +136,7 @@ export default function ContactsPage() {
             <Button
               size="sm"
               onClick={() => setIsAddOpen(true)}
-              className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs"
+              className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs self-start sm:self-auto"
             >
               <Plus className="h-3 w-3" />
               <span>Add Contact</span>
@@ -144,9 +144,9 @@ export default function ContactsPage() {
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
-            <div className="flex items-center space-x-2.5 flex-1 min-w-[240px]">
-              <Search className="h-4 w-4 text-[#888888]" />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
+            <div className="flex items-center space-x-2.5 flex-1 min-w-0">
+              <Search className="h-4 w-4 text-[#888888] shrink-0" />
               <input
                 type="text"
                 placeholder="Search by contact name, email, or title..."

@@ -100,7 +100,7 @@ export default function InboxPage() {
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle min-w-0">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
             <div className="space-y-1">
@@ -118,7 +118,7 @@ export default function InboxPage() {
             <Button
               size="sm"
               onClick={() => setIsSimModalOpen(true)}
-              className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs"
+              className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs self-start sm:self-auto"
             >
               <Plus className="h-3 w-3" />
               <span>Simulate Reply</span>
@@ -126,9 +126,9 @@ export default function InboxPage() {
           </div>
 
           {/* Master Detail Split */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-220px)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 min-h-[500px] md:h-[calc(100vh-220px)]">
             {/* Left Column: Reply List */}
-            <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] flex flex-col overflow-hidden">
+            <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] flex flex-col overflow-hidden min-h-[260px] md:min-h-0">
               <div className="p-3.5 border-b border-[#e8e8e8] bg-[#fafafa] flex items-center justify-between">
                 <span className="text-xs font-semibold text-[#111111] font-display">Inbound Messages</span>
                 <span className="text-[10px] text-[#888888] font-mono">{replies.length} total</span>
