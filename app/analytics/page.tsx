@@ -4,7 +4,8 @@ import * as React from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
 import { TopNav } from '@/components/layout/top-nav';
 import { DemoBanner } from '@/components/layout/demo-banner';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { BarChart3 } from 'lucide-react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -40,28 +41,34 @@ export default function AnalyticsPage() {
   const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6'];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">Intelligence & Conversion Analytics</h2>
-            <p className="text-xs text-slate-500">
-              Aggregated business performance, outreach conversion rates, and cross-border acquisition metrics.
+        <main className="flex-1 p-6 lg:p-8 space-y-8 overflow-y-auto hairline-grid-subtle">
+          <div className="space-y-1 pb-2 border-b border-[#e8e8e8]">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+              <BarChart3 className="h-3 w-3 text-[#111111]" />
+              <span>Conversion Telemetry</span>
+            </div>
+            <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+              Intelligence &amp; Conversion Analytics
+            </h2>
+            <p className="text-xs text-[#666666]">
+              Aggregated studio performance, outreach conversion velocity, and cross-border acquisition metrics.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-3 border-b border-[#f0f0f0]">
                 <CardTitle>Conversion Funnel</CardTitle>
-                <p className="text-xs text-slate-400">Prospect flow from discovery through to won deals</p>
+                <CardDescription>Prospect flow from discovery through to won deals</CardDescription>
               </CardHeader>
-              <CardContent className="pt-2">
+              <CardContent className="pt-6">
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
@@ -69,11 +76,19 @@ export default function AnalyticsPage() {
                       layout="vertical"
                       margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} />
-                      <YAxis type="category" dataKey="stage" tick={{ fontSize: 11 }} width={120} />
-                      <Tooltip />
-                      <Bar dataKey="count" fill="#0F172A" radius={[0, 4, 4, 0]} />
+                      <CartesianGrid strokeDasharray="2 2" horizontal={false} stroke="#e8e8e8" />
+                      <XAxis type="number" tick={{ fontSize: 10, fill: '#666666' }} />
+                      <YAxis type="category" dataKey="stage" tick={{ fontSize: 11, fill: '#111111' }} width={120} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#ffffff',
+                          borderRadius: '12px',
+                          border: '1px solid #e8e8e8',
+                          boxShadow: '0 4px 12px rgba(17,17,17,0.08)',
+                          fontSize: '11px',
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#111111" radius={[0, 6, 6, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

@@ -95,26 +95,32 @@ export default function CampaignsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-5 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Outreach Campaigns</h2>
-              <p className="text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+                <Megaphone className="h-3 w-3 text-[#111111]" />
+                <span>Sequences</span>
+              </div>
+              <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+                Outreach Campaigns
+              </h2>
+              <p className="text-xs text-[#666666]">
                 Segmented outreach sequences configured with daily volume pacing and country compliance rules.
               </p>
             </div>
             <Button
               size="sm"
               onClick={() => setIsAddOpen(true)}
-              className="h-8 gap-1.5 text-xs bg-slate-900 text-white"
+              className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs"
             >
               <Plus className="h-3 w-3" />
               <span>Create Campaign</span>
@@ -129,7 +135,7 @@ export default function CampaignsPage() {
               return (
                 <div
                   key={camp.id}
-                  className="p-5 bg-white border border-slate-200 rounded-lg shadow-sm space-y-3 text-xs"
+                  className="p-6 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] hover:border-[#cfcfcf] transition-all space-y-3 text-xs"
                 >
                   <div className="flex items-start justify-between">
                     <div>

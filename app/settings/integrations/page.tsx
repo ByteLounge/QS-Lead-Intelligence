@@ -66,26 +66,26 @@ export default function IntegrationsSettingsPage() {
       isConfigured: false,
     },
     {
-      id: 'n8n',
-      name: 'n8n Community Edition',
-      category: 'Automation Engine',
+      id: 'autopilot',
+      name: 'Vercel Serverless Autopilot & Cron',
+      category: 'Autonomous Engine',
       icon: Cpu,
-      iconColor: 'text-orange-500',
-      description: 'Self-hosted Docker automation engine executing WF-01 through WF-06 background workers.',
-      envVars: ['N8N_BASE_URL', 'N8N_WEBHOOK_SECRET', 'N8N_ENCRYPTION_KEY'],
+      iconColor: 'text-emerald-500',
+      description: 'Native cloud-based cron schedules executing background discovery, AI scoring, email dispatch, and digest reporting.',
+      envVars: ['CRON_SECRET', 'NEXT_PUBLIC_APP_URL'],
       isConfigured: true,
     },
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto max-w-5xl">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl">
           {/* Sub Navigation Header */}
           <div>
             <div className="flex items-center space-x-2 text-xs border-b border-slate-200 pb-3 mb-4">

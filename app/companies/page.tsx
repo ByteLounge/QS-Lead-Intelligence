@@ -76,7 +76,7 @@ export default function CompaniesPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -86,13 +86,19 @@ export default function CompaniesPage() {
           onOpenNewLead={() => setIsCreateCompanyOpen(true)}
         />
 
-        <main className="flex-1 p-6 space-y-5 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Discovered Companies</h2>
-              <p className="text-xs text-slate-500">
-                Target commercial businesses discovered via Google Places API, CSV ingestion, and manual registration.
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+                <Building2 className="h-3 w-3 text-[#111111]" />
+                <span>Target Accounts</span>
+              </div>
+              <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+                Discovered Companies
+              </h2>
+              <p className="text-xs text-[#666666]">
+                Commercial organizations discovered via Google Places API, CSV ingestion, and outbound prospecting.
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -100,42 +106,42 @@ export default function CompaniesPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsDiscoveryOpen(true)}
-                className="h-8 gap-1.5 text-xs"
+                className="h-8 gap-1.5 text-xs rounded-full border-[#e8e8e8] bg-white hover:bg-[#fafafa]"
               >
-                <Search className="h-3 w-3" />
+                <Search className="h-3 w-3 text-[#666666]" />
                 <span>Run Discovery</span>
               </Button>
               <Button
                 size="sm"
                 onClick={() => setIsCreateCompanyOpen(true)}
-                className="h-8 gap-1.5 text-xs bg-slate-900 text-white"
+                className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs"
               >
-                <Plus className="h-3 w-3" />
+                <Plus className="h-3.5 w-3.5" />
                 <span>Add Target</span>
               </Button>
             </div>
           </div>
 
           {/* Search & Filters */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
-            <div className="flex items-center space-x-2 flex-1 min-w-[240px]">
-              <Search className="h-4 w-4 text-slate-400" />
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
+            <div className="flex items-center space-x-2.5 flex-1 min-w-[240px]">
+              <Search className="h-4 w-4 text-[#888888]" />
               <input
                 type="text"
-                placeholder="Search by company name, address, notes..."
+                placeholder="Search by company name, domain, city..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-xs text-slate-900 focus:outline-none"
+                className="w-full text-xs text-[#111111] placeholder:text-[#999999] focus:outline-none bg-transparent font-medium"
               />
             </div>
 
             <div className="flex items-center space-x-3 text-xs">
               <div className="flex items-center space-x-1.5">
-                <span className="text-slate-500 font-medium text-[11px]">Country:</span>
+                <span className="text-[#777777] font-mono text-[10px] uppercase">Country:</span>
                 <select
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
-                  className="px-2 py-1 text-xs border border-slate-300 rounded bg-white text-slate-700"
+                  className="px-2.5 py-1 text-xs border border-[#e8e8e8] rounded-full bg-white text-[#111111] focus:outline-none"
                 >
                   <option value="">All Countries</option>
                   <option value="India">India</option>
@@ -147,11 +153,11 @@ export default function CompaniesPage() {
               </div>
 
               <div className="flex items-center space-x-1.5">
-                <span className="text-slate-500 font-medium text-[11px]">Sector:</span>
+                <span className="text-[#777777] font-mono text-[10px] uppercase">Sector:</span>
                 <select
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
-                  className="px-2 py-1 text-xs border border-slate-300 rounded bg-white text-slate-700"
+                  className="px-2.5 py-1 text-xs border border-[#e8e8e8] rounded-full bg-white text-[#111111] focus:outline-none"
                 >
                   <option value="">All Sectors</option>
                   <option value="Logistics and Warehousing">Logistics & Warehousing</option>
@@ -164,49 +170,49 @@ export default function CompaniesPage() {
           </div>
 
           {/* Companies Table */}
-          <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold uppercase text-[10px] tracking-wider">
+                <thead className="bg-[#fafafa] border-b border-[#e8e8e8] text-[#777777] font-mono text-[10px] uppercase tracking-wider">
                   <tr>
-                    <th className="p-3.5">Company Name & Domain</th>
-                    <th className="p-3.5">Industry Sector</th>
-                    <th className="p-3.5">Location</th>
-                    <th className="p-3.5">Source Provenance</th>
-                    <th className="p-3.5">Intelligence Status</th>
-                    <th className="p-3.5 text-right">Actions</th>
+                    <th className="p-4">Company Name &amp; Domain</th>
+                    <th className="p-4">Sector</th>
+                    <th className="p-4">Location</th>
+                    <th className="p-4">Provenance</th>
+                    <th className="p-4">AI Intelligence</th>
+                    <th className="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#f0f0f0]">
                   {loading ? (
                     <tr>
-                      <td colSpan={6} className="p-10 text-center text-slate-400">
-                        <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-500" />
-                        <span>Loading companies...</span>
+                      <td colSpan={6} className="p-12 text-center text-[#888888]">
+                        <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-[#111111]" />
+                        <span className="font-medium text-xs">Loading target accounts...</span>
                       </td>
                     </tr>
                   ) : companies.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-10 text-center text-slate-400">
-                        <Building2 className="h-8 w-8 mx-auto text-slate-300 mb-2" />
-                        <p className="font-semibold text-slate-700">No companies recorded</p>
-                        <p className="text-[11px] text-slate-400 mt-1">Use Lead Discovery to search businesses.</p>
+                      <td colSpan={6} className="p-12 text-center text-[#888888]">
+                        <Building2 className="h-8 w-8 mx-auto text-[#d4d4d4] mb-2" />
+                        <p className="font-semibold text-[#111111]">No companies recorded</p>
+                        <p className="text-[11px] text-[#777777] mt-1">Run Lead Discovery to ingest businesses from Google Places API.</p>
                       </td>
                     </tr>
                   ) : (
                     companies.map((comp) => (
-                      <tr key={comp.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="p-3.5">
-                          <Link href={`/companies/${comp.id}`} className="font-semibold text-slate-900 hover:text-emerald-700 flex items-center gap-1.5">
+                      <tr key={comp.id} className="hover:bg-[#fafafa] transition-colors">
+                        <td className="p-4">
+                          <Link href={`/companies/${comp.id}`} className="font-medium text-xs text-[#111111] hover:underline flex items-center gap-1.5">
                             <span>{comp.name}</span>
-                            <ArrowUpRight className="h-3 w-3 text-slate-400" />
+                            <ArrowUpRight className="h-3 w-3 text-[#999999]" />
                           </Link>
                           {comp.website && (
                             <a
                               href={comp.website}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-[11px] text-slate-400 hover:text-slate-600 inline-flex items-center gap-1 mt-0.5"
+                              className="text-[11px] text-[#777777] hover:text-[#111111] inline-flex items-center gap-1 mt-0.5 font-mono"
                             >
                               <span>{comp.domain || comp.website}</span>
                               <ExternalLink className="h-2.5 w-2.5" />
@@ -214,20 +220,20 @@ export default function CompaniesPage() {
                           )}
                         </td>
 
-                        <td className="p-3.5 text-slate-700">{comp.industry || 'General SME'}</td>
+                        <td className="p-4 text-[#555555]">{comp.industry || 'General SME'}</td>
 
-                        <td className="p-3.5 text-slate-600">
-                          <span className="font-medium text-slate-900">{comp.city || '—'}</span>
-                          <span className="block text-[10px] text-slate-400">{comp.country}</span>
+                        <td className="p-4 text-[#555555]">
+                          <span className="font-medium text-[#111111]">{comp.city || '—'}</span>
+                          <span className="block text-[10px] text-[#888888]">{comp.country}</span>
                         </td>
 
-                        <td className="p-3.5">
+                        <td className="p-4">
                           <Badge variant="secondary" className="capitalize text-[10px]">
                             {comp.discovery_source?.replace('_', ' ')}
                           </Badge>
                         </td>
 
-                        <td className="p-3.5">
+                        <td className="p-4">
                           <Badge
                             variant={
                               comp.research_status === 'completed'
@@ -242,13 +248,13 @@ export default function CompaniesPage() {
                           </Badge>
                         </td>
 
-                        <td className="p-3.5 text-right space-x-1.5">
+                        <td className="p-4 text-right space-x-1.5">
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleResearchCompany(comp.id, comp.name)}
                             disabled={researchingId === comp.id}
-                            className="h-7 px-2 text-[11px] gap-1"
+                            className="h-7 px-3 text-[11px] rounded-full gap-1 border-[#e8e8e8]"
                           >
                             {researchingId === comp.id ? (
                               <Loader2 className="h-3 w-3 animate-spin" />
@@ -259,7 +265,7 @@ export default function CompaniesPage() {
                           </Button>
 
                           <Link href={`/companies/${comp.id}`}>
-                            <Button size="sm" className="h-7 px-2.5 text-[11px] bg-slate-900 text-white">
+                            <Button size="sm" className="h-7 px-3 text-[11px] rounded-full bg-[#111111] text-white">
                               View
                             </Button>
                           </Link>

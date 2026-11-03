@@ -12,14 +12,13 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast';
 import {
   Search,
-  Filter,
   Sparkles,
   ArrowUpRight,
   Loader2,
   Building2,
-  CheckCircle2,
   ExternalLink,
   Plus,
+  Target,
 } from 'lucide-react';
 
 export default function LeadsPage() {
@@ -80,7 +79,7 @@ export default function LeadsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -90,13 +89,19 @@ export default function LeadsPage() {
           onOpenNewLead={() => setIsCreateCompanyOpen(true)}
         />
 
-        <main className="flex-1 p-6 space-y-5 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Leads & Intelligence</h2>
-              <p className="text-xs text-slate-500">
-                AI qualification, objective 100-point scoring, and identified software engineering opportunities.
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+                <Target className="h-3 w-3 text-[#111111]" />
+                <span>Intelligence Pipeline</span>
+              </div>
+              <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+                Leads &amp; Intelligence Qualification
+              </h2>
+              <p className="text-xs text-[#666666]">
+                Objective 100-point Gemini AI qualification scoring and detected software modernization opportunities.
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -104,42 +109,42 @@ export default function LeadsPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsDiscoveryOpen(true)}
-                className="h-8 gap-1.5 text-xs"
+                className="h-8 gap-1.5 text-xs rounded-full border-[#e8e8e8] bg-white hover:bg-[#fafafa]"
               >
-                <Search className="h-3 w-3" />
-                <span>Discover via Places / CSV</span>
+                <Search className="h-3 w-3 text-[#666666]" />
+                <span>Discovery</span>
               </Button>
               <Button
                 size="sm"
                 onClick={() => setIsCreateCompanyOpen(true)}
-                className="h-8 gap-1.5 text-xs bg-slate-900 text-white"
+                className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs"
               >
-                <Plus className="h-3 w-3" />
+                <Plus className="h-3.5 w-3.5" />
                 <span>New Lead</span>
               </Button>
             </div>
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
-            <div className="flex items-center space-x-2 flex-1 min-w-[240px]">
-              <Search className="h-4 w-4 text-slate-400" />
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
+            <div className="flex items-center space-x-2.5 flex-1 min-w-[240px]">
+              <Search className="h-4 w-4 text-[#888888]" />
               <input
                 type="text"
                 placeholder="Search leads by company, opportunity, solution..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-xs text-slate-900 focus:outline-none"
+                className="w-full text-xs text-[#111111] placeholder:text-[#999999] focus:outline-none bg-transparent font-medium"
               />
             </div>
 
             <div className="flex items-center space-x-3 text-xs">
               <div className="flex items-center space-x-1.5">
-                <span className="text-slate-500 font-medium text-[11px]">Score Tier:</span>
+                <span className="text-[#777777] font-mono text-[10px] uppercase">Tier:</span>
                 <select
                   value={levelFilter}
                   onChange={(e) => setLevelFilter(e.target.value)}
-                  className="px-2 py-1 text-xs border border-slate-300 rounded bg-white text-slate-700"
+                  className="px-2.5 py-1 text-xs border border-[#e8e8e8] rounded-full bg-white text-[#111111] focus:outline-none"
                 >
                   <option value="">All Tiers</option>
                   <option value="high_priority">High Priority (≥80)</option>
@@ -150,11 +155,11 @@ export default function LeadsPage() {
               </div>
 
               <div className="flex items-center space-x-1.5">
-                <span className="text-slate-500 font-medium text-[11px]">Stage:</span>
+                <span className="text-[#777777] font-mono text-[10px] uppercase">Stage:</span>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-2 py-1 text-xs border border-slate-300 rounded bg-white text-slate-700"
+                  className="px-2.5 py-1 text-xs border border-[#e8e8e8] rounded-full bg-white text-[#111111] focus:outline-none"
                 >
                   <option value="">All Stages</option>
                   <option value="discovered">Discovered</option>
@@ -168,34 +173,34 @@ export default function LeadsPage() {
           </div>
 
           {/* Data Table */}
-          <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold uppercase text-[10px] tracking-wider">
+                <thead className="bg-[#fafafa] border-b border-[#e8e8e8] text-[#777777] font-mono text-[10px] uppercase tracking-wider">
                   <tr>
-                    <th className="p-3.5">Company & Domain</th>
-                    <th className="p-3.5">Location</th>
-                    <th className="p-3.5">AI Score</th>
-                    <th className="p-3.5">Software Opportunity</th>
-                    <th className="p-3.5">Recommended Solution</th>
-                    <th className="p-3.5">Stage</th>
-                    <th className="p-3.5 text-right">Actions</th>
+                    <th className="p-4">Company &amp; Domain</th>
+                    <th className="p-4">Location</th>
+                    <th className="p-4">Gemini Score</th>
+                    <th className="p-4">Software Opportunity</th>
+                    <th className="p-4">Recommended Solution</th>
+                    <th className="p-4">Stage</th>
+                    <th className="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#f0f0f0]">
                   {loading ? (
                     <tr>
-                      <td colSpan={7} className="p-10 text-center text-slate-400">
-                        <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-500" />
-                        <span>Loading lead records...</span>
+                      <td colSpan={7} className="p-12 text-center text-[#888888]">
+                        <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-[#111111]" />
+                        <span className="font-medium text-xs">Loading intelligence records...</span>
                       </td>
                     </tr>
                   ) : leads.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="p-10 text-center text-slate-400">
-                        <Building2 className="h-8 w-8 mx-auto text-slate-300 mb-2" />
-                        <p className="font-semibold text-slate-700">No leads found matching criteria</p>
-                        <p className="text-[11px] text-slate-400 mt-1">Run discovery or add target companies manually.</p>
+                      <td colSpan={7} className="p-12 text-center text-[#888888]">
+                        <Building2 className="h-8 w-8 mx-auto text-[#d4d4d4] mb-2" />
+                        <p className="font-semibold text-[#111111]">No leads found matching criteria</p>
+                        <p className="text-[11px] text-[#777777] mt-1">Run discovery or add target companies manually.</p>
                       </td>
                     </tr>
                   ) : (
@@ -206,18 +211,18 @@ export default function LeadsPage() {
                       const isPotential = score >= 60 && score < 80;
 
                       return (
-                        <tr key={lead.id} className="hover:bg-slate-50/60 transition-colors">
-                          <td className="p-3.5">
-                            <Link href={`/leads/${lead.id}`} className="font-semibold text-slate-900 hover:text-emerald-700 flex items-center gap-1.5">
+                        <tr key={lead.id} className="hover:bg-[#fafafa] transition-colors">
+                          <td className="p-4">
+                            <Link href={`/leads/${lead.id}`} className="font-medium text-xs text-[#111111] hover:underline flex items-center gap-1.5">
                               <span>{company.name || 'Unnamed Company'}</span>
-                              <ArrowUpRight className="h-3 w-3 text-slate-400" />
+                              <ArrowUpRight className="h-3 w-3 text-[#999999]" />
                             </Link>
                             {company.website && (
                               <a
                                 href={company.website}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-[11px] text-slate-400 hover:text-slate-600 inline-flex items-center gap-1 mt-0.5"
+                                className="text-[11px] text-[#777777] hover:text-[#111111] inline-flex items-center gap-1 mt-0.5 font-mono"
                               >
                                 <span>{company.domain || company.website}</span>
                                 <ExternalLink className="h-2.5 w-2.5" />
@@ -225,22 +230,22 @@ export default function LeadsPage() {
                             )}
                           </td>
 
-                          <td className="p-3.5 text-slate-600">
-                            <span className="font-medium text-slate-800">{company.city || company.country}</span>
-                            <span className="block text-[10px] text-slate-400">{company.industry}</span>
+                          <td className="p-4 text-[#555555]">
+                            <span className="font-medium text-[#111111]">{company.city || company.country}</span>
+                            <span className="block text-[10px] text-[#888888]">{company.industry}</span>
                           </td>
 
-                          <td className="p-3.5">
+                          <td className="p-4">
                             <div className="flex items-center space-x-1.5">
                               <span
-                                className={`text-sm font-bold ${
+                                className={`text-xs font-semibold font-mono ${
                                   isHigh
-                                    ? 'text-emerald-700 font-extrabold'
+                                    ? 'text-emerald-700'
                                     : isPotential
                                     ? 'text-blue-700'
                                     : score >= 40
-                                    ? 'text-slate-600'
-                                    : 'text-red-500'
+                                    ? 'text-[#555555]'
+                                    : 'text-rose-600'
                                 }`}
                               >
                                 {score}/100
@@ -255,31 +260,31 @@ export default function LeadsPage() {
                             </div>
                           </td>
 
-                          <td className="p-3.5 max-w-xs">
-                            <p className="text-slate-700 line-clamp-2 text-xs">
-                              {lead.identified_opportunity || 'Pending deep AI intelligence research'}
+                          <td className="p-4 max-w-xs">
+                            <p className="text-[#333333] line-clamp-2 text-xs leading-relaxed">
+                              {lead.identified_opportunity || 'Pending AI intelligence research'}
                             </p>
                           </td>
 
-                          <td className="p-3.5 max-w-xs">
-                            <p className="text-slate-900 font-medium line-clamp-1">
+                          <td className="p-4 max-w-xs">
+                            <p className="text-[#111111] font-medium line-clamp-1 text-xs">
                               {lead.recommended_solution || '—'}
                             </p>
                           </td>
 
-                          <td className="p-3.5">
-                            <Badge variant="secondary" className="capitalize">
+                          <td className="p-4">
+                            <Badge variant="secondary" className="capitalize text-[10px]">
                               {lead.status?.replace('_', ' ')}
                             </Badge>
                           </td>
 
-                          <td className="p-3.5 text-right space-x-1.5">
+                          <td className="p-4 text-right space-x-1.5">
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => handleTriggerResearch(lead.id, company.name)}
                               disabled={researchingId === lead.id}
-                              className="h-7 px-2 text-[11px] gap-1"
+                              className="h-7 px-3 text-[11px] rounded-full gap-1 border-[#e8e8e8]"
                               title="Run Gemini AI intelligence on company website"
                             >
                               {researchingId === lead.id ? (
@@ -291,8 +296,8 @@ export default function LeadsPage() {
                             </Button>
 
                             <Link href={`/leads/${lead.id}`}>
-                              <Button size="sm" className="h-7 px-2.5 text-[11px] bg-slate-900 text-white">
-                                View Intelligence
+                              <Button size="sm" className="h-7 px-3 text-[11px] rounded-full bg-[#111111] text-white">
+                                View
                               </Button>
                             </Link>
                           </td>

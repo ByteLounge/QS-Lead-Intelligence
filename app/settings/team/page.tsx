@@ -29,14 +29,14 @@ export default function TeamSettingsPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto max-w-5xl">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-5xl">
           {/* Sub Navigation Header */}
           <div>
             <div className="flex items-center space-x-2 text-xs border-b border-slate-200 pb-3 mb-4">

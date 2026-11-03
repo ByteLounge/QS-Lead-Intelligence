@@ -8,23 +8,32 @@ function cn(...inputs: (string | undefined | null | false)[]) {
 }
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-full text-xs font-medium tracking-tight transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none active:scale-[0.98]',
   {
     variants: {
       variant: {
-        default: 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm',
-        destructive: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
-        outline: 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 shadow-sm',
-        secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200',
-        ghost: 'hover:bg-slate-100 text-slate-700',
-        link: 'text-slate-900 underline-offset-4 hover:underline',
-        success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm',
+        default:
+          'bg-[#111111] text-white hover:bg-[#262626] shadow-[0_1px_2px_rgba(17,17,17,0.08)]',
+        destructive:
+          'bg-rose-600 text-white hover:bg-rose-700 shadow-sm',
+        outline:
+          'border border-[#e8e8e8] bg-white hover:bg-[#fafafa] hover:border-[#cfcfcf] text-[#111111] shadow-[0_1px_2px_rgba(17,17,17,0.04)]',
+        secondary:
+          'bg-[#f4f4f4] text-[#111111] hover:bg-[#ececec] border border-transparent',
+        ghost:
+          'text-[#666666] hover:text-[#111111] hover:bg-[#f4f4f4]',
+        link:
+          'text-[#111111] underline-offset-4 hover:underline',
+        success:
+          'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm',
+        glass:
+          'glass text-[#111111] hover:bg-white/90 border border-[rgba(17,17,17,0.08)] shadow-[0_1px_2px_rgba(17,17,17,0.04)]',
       },
       size: {
         default: 'h-9 px-4 py-2',
-        sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-10 rounded-md px-8 text-sm',
-        icon: 'h-9 w-9',
+        sm: 'h-8 px-3.5 text-xs',
+        lg: 'h-10 px-6 text-sm',
+        icon: 'h-8 w-8 p-0',
       },
     },
     defaultVariants: {

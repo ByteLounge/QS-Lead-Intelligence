@@ -44,22 +44,28 @@ export default function ActivitiesPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-5 overflow-y-auto max-w-4xl">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">System Audit & Activity Timeline</h2>
-            <p className="text-xs text-slate-500">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle max-w-4xl">
+          <div className="space-y-1 pb-2 border-b border-[#e8e8e8]">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+              <History className="h-3 w-3 text-[#111111]" />
+              <span>Audit Trail</span>
+            </div>
+            <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+              System Audit &amp; Activity Timeline
+            </h2>
+            <p className="text-xs text-[#666666]">
               Immutable chronological record of lead discoveries, AI scores, sending operations, and reply events.
             </p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5">
+          <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] p-6">
             {loading ? (
               <div className="py-12 text-center text-slate-400 text-xs">
                 <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-slate-500" />

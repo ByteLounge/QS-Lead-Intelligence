@@ -93,39 +93,45 @@ export default function InboxPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-5 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Inbox & Reply Intelligence</h2>
-              <p className="text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+                <Inbox className="h-3 w-3 text-[#111111]" />
+                <span>Inbound Intent Engine</span>
+              </div>
+              <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+                Inbox &amp; Reply Intelligence
+              </h2>
+              <p className="text-xs text-[#666666]">
                 Inbound prospect emails classified by Gemini intent recognition with deterministic opt-out safeguards.
               </p>
             </div>
             <Button
               size="sm"
               onClick={() => setIsSimModalOpen(true)}
-              className="h-8 gap-1.5 text-xs bg-slate-900 text-white"
+              className="h-8 gap-1.5 text-xs rounded-full bg-[#111111] hover:bg-[#262626] text-white shadow-xs"
             >
               <Plus className="h-3 w-3" />
-              <span>Simulate Inbound Reply</span>
+              <span>Simulate Reply</span>
             </Button>
           </div>
 
           {/* Master Detail Split */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-210px)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-220px)]">
             {/* Left Column: Reply List */}
-            <div className="bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col overflow-hidden">
-              <div className="p-3 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-700">Inbound Messages</span>
-                <span className="text-[10px] text-slate-400 font-medium">{replies.length} total</span>
+            <div className="bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] flex flex-col overflow-hidden">
+              <div className="p-3.5 border-b border-[#e8e8e8] bg-[#fafafa] flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#111111] font-display">Inbound Messages</span>
+                <span className="text-[10px] text-[#888888] font-mono">{replies.length} total</span>
               </div>
 
               <div className="flex-1 overflow-y-auto divide-y divide-slate-100">

@@ -13,12 +13,8 @@ import { PipelineStage, Opportunity } from '@/lib/types';
 import {
   Kanban,
   DollarSign,
-  Calendar,
-  Clock,
-  ArrowRight,
   FileText,
   Loader2,
-  CheckCircle2,
   TrendingUp,
 } from 'lucide-react';
 
@@ -93,42 +89,48 @@ export default function OpportunitiesPage() {
   const activeMeetingDeals = opportunities.filter((o) => o.stage === 'meeting_requested').length;
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <DemoBanner isDemoMode={false} />
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-5 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
           {/* Header & Stats Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Sales Pipeline Kanban</h2>
-              <p className="text-xs text-slate-500">
-                13-stage B2B client acquisition lifecycle tracking deals from initial discovery to closure.
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-[#e8e8e8]">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border border-[#e8e8e8] bg-white text-[#666666]">
+                <Kanban className="h-3 w-3 text-[#111111]" />
+                <span>Deal Pipeline</span>
+              </div>
+              <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
+                Sales Pipeline Kanban
+              </h2>
+              <p className="text-xs text-[#666666]">
+                13-stage B2B client acquisition lifecycle tracking accounts from discovery to closed studio contracts.
               </p>
             </div>
 
-            <div className="flex items-center space-x-3 text-xs bg-white p-2 border border-slate-200 rounded-lg shadow-sm">
-              <div className="px-3 border-r border-slate-100">
-                <span className="text-[10px] text-slate-400 block font-medium">Active Pipeline</span>
-                <span className="text-sm font-bold text-slate-900">${totalPipeline.toLocaleString()}</span>
+            <div className="flex items-center space-x-3 text-xs bg-white p-2.5 border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)]">
+              <div className="px-3 border-r border-[#e8e8e8]">
+                <span className="text-[10px] font-mono uppercase text-[#888888] block">Active Pipeline</span>
+                <span className="text-sm font-semibold text-[#111111] font-display">${totalPipeline.toLocaleString()}</span>
               </div>
-              <div className="px-3 border-r border-slate-100">
-                <span className="text-[10px] text-slate-400 block font-medium">Won Revenue</span>
-                <span className="text-sm font-bold text-emerald-700">${wonTotal.toLocaleString()}</span>
+              <div className="px-3 border-r border-[#e8e8e8]">
+                <span className="text-[10px] font-mono uppercase text-[#888888] block">Won Revenue</span>
+                <span className="text-sm font-semibold text-emerald-700 font-display">${wonTotal.toLocaleString()}</span>
               </div>
               <div className="px-3">
-                <span className="text-[10px] text-slate-400 block font-medium">Meeting Requests</span>
-                <span className="text-sm font-bold text-purple-700">{activeMeetingDeals}</span>
+                <span className="text-[10px] font-mono uppercase text-[#888888] block">Meeting Requests</span>
+                <span className="text-sm font-semibold text-[#111111] font-display">{activeMeetingDeals}</span>
               </div>
             </div>
           </div>
 
           {/* Kanban Board Horizontal Scroll Container */}
-          <div className="overflow-x-auto pb-4">
-            <div className="flex space-x-3 min-w-[3200px]">
+          <div className="overflow-x-auto pb-6">
+            <div className="flex space-x-3.5 min-w-[3300px]">
               {PIPELINE_COLUMNS.map((col) => {
                 const colOpps = opportunities.filter((o) => o.stage === col.stage);
                 const colValue = colOpps.reduce((sum, o) => sum + Number(o.deal_value || 0), 0);
@@ -136,63 +138,63 @@ export default function OpportunitiesPage() {
                 return (
                   <div
                     key={col.stage}
-                    className="w-64 flex-shrink-0 bg-slate-100/70 border border-slate-200/80 rounded-lg flex flex-col max-h-[calc(100vh-220px)]"
+                    className="w-64 flex-shrink-0 bg-[#f7f7f7] border border-[#e8e8e8] rounded-2xl flex flex-col max-h-[calc(100vh-220px)] shadow-[0_1px_2px_rgba(17,17,17,0.02)]"
                   >
                     {/* Column Header */}
-                    <div className="p-3 border-b border-slate-200/60 bg-white/50 rounded-t-lg flex items-center justify-between">
+                    <div className="p-3.5 border-b border-[#e8e8e8] bg-white rounded-t-2xl flex items-center justify-between">
                       <div>
-                        <p className="text-xs font-semibold text-slate-900">{col.label}</p>
-                        <p className="text-[10px] text-slate-400 font-medium">
-                          ${colValue.toLocaleString()} ({colOpps.length})
+                        <p className="text-xs font-semibold text-[#111111] font-display">{col.label}</p>
+                        <p className="text-[10px] text-[#888888] font-mono mt-0.5">
+                          ${colValue.toLocaleString()} · {colOpps.length}
                         </p>
                       </div>
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-700">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-[#f5f5f5] text-[#555555] border border-[#e8e8e8]">
                         {colOpps.length}
                       </span>
                     </div>
 
                     {/* Column Items */}
-                    <div className="p-2 space-y-2.5 overflow-y-auto flex-1">
+                    <div className="p-2.5 space-y-2.5 overflow-y-auto flex-1">
                       {colOpps.length === 0 ? (
-                        <div className="py-6 text-center text-[11px] text-slate-400 border border-dashed border-slate-200 rounded-md">
-                          No deals in stage
+                        <div className="py-8 text-center text-[10px] font-mono text-[#aaaaaa] border border-dashed border-[#e8e8e8] rounded-xl bg-white/40">
+                          Empty Stage
                         </div>
                       ) : (
                         colOpps.map((opp) => (
                           <div
                             key={opp.id}
-                            className="p-3 bg-white border border-slate-200 rounded-md shadow-xs hover:shadow-sm transition-shadow space-y-2 text-xs"
+                            className="p-3.5 bg-white border border-[#e8e8e8] rounded-xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] hover:border-[#cfcfcf] transition-all space-y-2 text-xs"
                           >
                             <div>
-                              <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">
+                              <span className="text-[10px] font-mono text-[#888888] uppercase tracking-wide">
                                 {opp.company?.name || 'Prospect Company'}
                               </span>
-                              <h4 className="font-semibold text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                              <h4 className="font-medium text-[#111111] leading-snug line-clamp-2 mt-0.5 font-display">
                                 {opp.title}
                               </h4>
                             </div>
 
                             <div className="flex items-center justify-between pt-1">
-                              <span className="font-bold text-slate-900 text-xs">
+                              <span className="font-semibold text-[#111111] text-xs font-mono">
                                 ${Number(opp.deal_value || 0).toLocaleString()}
                               </span>
-                              <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
                                 {opp.probability}% Prob
                               </span>
                             </div>
 
                             {opp.next_action && (
-                              <p className="text-[11px] text-slate-500 bg-slate-50 p-1.5 rounded line-clamp-2">
-                                <span className="font-semibold text-slate-700">Next:</span> {opp.next_action}
+                              <p className="text-[11px] text-[#666666] bg-[#fafafa] p-2 rounded-lg border border-[#f0f0f0] line-clamp-2 leading-relaxed">
+                                <strong className="text-[#111111]">Next:</strong> {opp.next_action}
                               </p>
                             )}
 
                             {/* Stage Selector & Actions */}
-                            <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5">
+                            <div className="pt-2 border-t border-[#f5f5f5] flex items-center justify-between gap-1.5">
                               <select
                                 value={opp.stage}
                                 onChange={(e) => handleStageChange(opp.id, e.target.value as PipelineStage)}
-                                className="text-[10px] px-1.5 py-1 border border-slate-200 rounded bg-white text-slate-700 focus:outline-none max-w-[130px]"
+                                className="text-[10px] px-2 py-1 border border-[#e8e8e8] rounded-full bg-white text-[#333333] focus:outline-none max-w-[130px] font-mono"
                               >
                                 {PIPELINE_COLUMNS.map((c) => (
                                   <option key={c.stage} value={c.stage}>
@@ -205,10 +207,10 @@ export default function OpportunitiesPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setActiveProposalOpp(opp)}
-                                className="h-6 px-1.5 text-[10px] gap-1 text-slate-600 hover:text-slate-900"
+                                className="h-6 px-2 text-[10px] gap-1 text-[#666666] hover:text-[#111111] rounded-full"
                                 title="Draft Proposal PDF"
                               >
-                                <FileText className="h-3 w-3 text-slate-500" />
+                                <FileText className="h-3 w-3 text-[#888888]" />
                                 <span>Proposal</span>
                               </Button>
                             </div>

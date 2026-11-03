@@ -84,26 +84,26 @@ export default function CompanyDetailPage() {
   const { company, leads = [], contacts = [] } = data;
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#fafafa]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <TopNav />
 
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8 space-y-6 overflow-y-auto hairline-grid-subtle">
           <Link
             href="/companies"
-            className="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 font-medium"
+            className="text-xs text-[#666666] hover:text-[#111111] flex items-center gap-1 font-medium transition-colors"
           >
             <ArrowLeft className="h-3 w-3" />
             <span>Back to Companies</span>
           </Link>
 
           {/* Company Profile Header */}
-          <div className="p-5 bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-6 bg-white border border-[#e8e8e8] rounded-2xl shadow-[0_1px_2px_rgba(17,17,17,0.03)] flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center space-x-3">
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">{company.name}</h2>
+                <h2 className="text-xl font-semibold text-[#111111] tracking-tight font-display">{company.name}</h2>
                 <Badge variant="secondary" className="capitalize text-[10px]">
                   {company.discovery_source?.replace('_', ' ')}
                 </Badge>
@@ -115,7 +115,7 @@ export default function CompanyDetailPage() {
                 </Badge>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1.5">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-[#666666] mt-1.5 font-mono text-[11px]">
                 <span>{company.industry}</span>
                 <span>•</span>
                 <span>{company.city ? `${company.city}, ${company.country}` : company.country}</span>
