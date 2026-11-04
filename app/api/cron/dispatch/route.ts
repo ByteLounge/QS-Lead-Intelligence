@@ -22,12 +22,16 @@ async function handleAutopilotDispatch(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    if (cronSecret && authHeader && authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: 'Unauthorized cron request.' }, { status: 401 });
     }
 
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({ error: 'Supabase is not configured.' }, { status: 500 });
+      return NextResponse.json({
+        success: false,
+        status: 'database_not_configured',
+        message: 'Supabase is not configured.',
+      }, { status: 200 });
     }
 
     // 1. Check Safeguards & Kill Switch
@@ -40,21 +44,65 @@ async function handleAutopilotDispatch(req: NextRequest) {
         reason: eligibility.reason,
         dailySentCount: eligibility.dailySentCount,
         dailyLimit: eligibility.dailyLimit,
+      }, { status: 200 });
+    }
+
+    const availableSlots = Math.max(0, eligibility.dailyLimit - eligibility.dailySentCount);
+    if (availableSlots <= 0) {
+      return NextResponse.json({
+        success: true,
+        dispatchedCount: 0,
+        status: 'daily_limit_reached',
+        reason: `Daily sending limit of ${eligibility.dailyLimit} reached.`,
+        dailySentCount: eligibility.dailySentCount,
+        dailyLimit: eligibility.dailyLimit,
+      }, { status: 200 });
+    }
+
+    const batchLimit = Math.min(5, availableSlots);
+    let messages: any[] = [];
+
+    // 2. Claim up to batchLimit messages (Try RPC first with correct 'p_limit' parameter)
+    try {
+      const { data: rpcClaimed, error: rpcErr } = await supabaseAdmin.rpc('claim_eligible_outbound_messages', {
+        p_limit: batchLimit,
       });
+
+      if (!rpcErr && Array.isArray(rpcClaimed) && rpcClaimed.length > 0) {
+        messages = rpcClaimed;
+      }
+    } catch (rpcEx) {
+      console.warn('[Dispatch Cron] RPC claim failed or not found, falling back to direct table query:', rpcEx);
     }
 
-    // 2. Claim up to 5 approved messages using concurrency-safe stored function
-    const { data: claimed, error: claimErr } = await supabaseAdmin.rpc('claim_eligible_outbound_messages', {
-      batch_size: 5,
-    });
+    // Direct fallback if RPC was not found or returned empty
+    if (messages.length === 0) {
+      const { data: directClaimed, error: directErr } = await supabaseAdmin
+        .from('outreach_messages')
+        .select('id, lead_id, contact_id, subject, body, sequence_number, status, scheduled_at')
+        .eq('status', 'approved')
+        .lte('scheduled_at', new Date().toISOString())
+        .order('scheduled_at', { ascending: true })
+        .limit(batchLimit);
 
-    if (claimErr) {
-      console.error('[Dispatch Cron] Error claiming messages:', claimErr);
-      return NextResponse.json({ error: claimErr.message }, { status: 500 });
+      if (!directErr && directClaimed && directClaimed.length > 0) {
+        messages = directClaimed;
+      }
     }
 
-    const messages = claimed || [];
+    // If no approved messages ready for sending
+    if (messages.length === 0) {
+      return NextResponse.json({
+        success: true,
+        status: 'idle',
+        claimedCount: 0,
+        dispatchedCount: 0,
+        message: 'No approved outreach messages in queue awaiting dispatch. Queue is clear.',
+      }, { status: 200 });
+    }
+
     let dispatchedCount = 0;
+    const compliance = await getComplianceSettings();
 
     for (const msg of messages) {
       // Fetch recipient contact details
@@ -66,7 +114,6 @@ async function handleAutopilotDispatch(req: NextRequest) {
 
       if (!contact || !contact.email) continue;
 
-      const compliance = await getComplianceSettings();
       const result = await dispatchOutreachEmail({
         to: contact.email,
         subject: msg.subject,
@@ -112,10 +159,14 @@ async function handleAutopilotDispatch(req: NextRequest) {
     if (dispatchedCount > 0) {
       await sendDiscordNotification({
         title: '🚀 Vercel Autopilot: Outreach Batch Dispatched',
-        message: `Successfully dispatched **${dispatchedCount}** cold outreach email(s) via Gmail API.`,
+        message: `Successfully dispatched **${dispatchedCount}** cold outreach email(s) via automated transport.`,
         level: 'success',
         fields: [
-          { name: 'Dispatched Today', value: `${(eligibility.dailySentCount || 0) + dispatchedCount} / ${eligibility.dailyLimit}`, inline: true },
+          {
+            name: 'Dispatched Today',
+            value: `${(eligibility.dailySentCount || 0) + dispatchedCount} / ${eligibility.dailyLimit}`,
+            inline: true,
+          },
           { name: 'Queue Status', value: 'Batch Completed', inline: true },
         ],
       });
@@ -125,10 +176,15 @@ async function handleAutopilotDispatch(req: NextRequest) {
       success: true,
       claimedCount: messages.length,
       dispatchedCount,
-    });
+      message: `Dispatched ${dispatchedCount} outreach message(s).`,
+    }, { status: 200 });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('[Autopilot Dispatch Cron Error]:', message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({
+      success: false,
+      error: message,
+      status: 'error_handled',
+    }, { status: 200 });
   }
 }

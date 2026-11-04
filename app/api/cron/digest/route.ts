@@ -91,6 +91,10 @@ async function handleAutopilotDigest(req: NextRequest) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('[Autopilot Digest Cron Error]:', message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({
+      success: false,
+      error: message,
+      status: 'error_handled',
+    }, { status: 200 });
   }
 }

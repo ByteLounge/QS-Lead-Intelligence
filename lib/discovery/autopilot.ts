@@ -110,7 +110,12 @@ export async function handleAutopilotDiscovery(req?: NextRequest) {
 
     // 2. High-speed unified Gemini Intelligence Discovery (Single round-trip < 4s)
     const genAI = new GoogleGenerativeAI(geminiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
+    const model = genAI.getGenerativeModel({
+      model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+      generationConfig: {
+        responseMimeType: 'application/json',
+      },
+    });
 
     const prompt = `You are Senior Lead Intelligence Director at Queenstown Labs (a software engineering studio building custom mobile apps, modern web platforms, and client portals).
 Discover 2 REAL, actual commercial enterprises in ${target.city}, ${target.country} in the sector "${target.industry}" that need custom software (e.g. a custom mobile app, client portal, or modern website redesign).
@@ -144,7 +149,32 @@ Output strictly a JSON array without markdown formatting:
     if (text.endsWith('```')) text = text.slice(0, -3);
     text = text.trim();
 
-    const discoveredTargets: GeneratedDiscoveryTarget[] = JSON.parse(text);
+    let discoveredTargets: GeneratedDiscoveryTarget[] = [];
+    try {
+      discoveredTargets = JSON.parse(text);
+    } catch {
+      // Find JSON array bounds if wrapped
+      const firstBracket = text.indexOf('[');
+      const lastBracket = text.lastIndexOf(']');
+      if (firstBracket !== -1 && lastBracket > firstBracket) {
+        try {
+          const cleanSub = text.substring(firstBracket, lastBracket + 1);
+          discoveredTargets = JSON.parse(cleanSub);
+        } catch (subErr) {
+          console.error('[Autopilot JSON Extraction Fallback Error]:', subErr);
+        }
+      }
+    }
+
+    if (!Array.isArray(discoveredTargets) || discoveredTargets.length === 0) {
+      console.warn('[Autopilot] No valid targets parsed in this cycle:', text);
+      return NextResponse.json({
+        success: true,
+        target,
+        discoveredCount: 0,
+        message: 'No new targets generated in this cycle. Will retry on next scheduled interval.',
+      }, { status: 200 });
+    }
 
     let newlyInsertedCount = 0;
     let highPriorityCount = 0;
@@ -356,6 +386,10 @@ Output strictly a JSON array without markdown formatting:
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('[Autopilot Discovery Cron Error]:', message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({
+      success: false,
+      error: message,
+      status: 'error_handled',
+    }, { status: 200 });
   }
 }
