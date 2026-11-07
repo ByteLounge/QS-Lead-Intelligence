@@ -105,21 +105,26 @@ async function handleAutopilotDispatch(req: NextRequest) {
     const compliance = await getComplianceSettings();
 
     for (const msg of messages) {
-      // Fetch recipient contact details
-      const { data: contact } = await supabaseAdmin
-        .from('contacts')
-        .select('*')
-        .eq('id', msg.contact_id)
-        .single();
+      const messageId = msg.message_id || msg.id;
+      let recipientEmail = msg.recipient_email;
 
-      if (!contact || !contact.email) continue;
+      if (!recipientEmail && msg.contact_id) {
+        const { data: contact } = await supabaseAdmin
+          .from('contacts')
+          .select('email')
+          .eq('id', msg.contact_id)
+          .single();
+        recipientEmail = contact?.email;
+      }
+
+      if (!recipientEmail) continue;
 
       const result = await dispatchOutreachEmail({
-        to: contact.email,
+        to: recipientEmail,
         subject: msg.subject,
         body: msg.body,
         fromName: compliance.sender_name || 'Queenstown Labs',
-        fromEmail: compliance.sender_email,
+        fromEmail: compliance.sender_email || process.env.SENDER_EMAIL || 'queenstownlabs@gmail.com',
       });
 
       if (result.success) {
@@ -132,15 +137,15 @@ async function handleAutopilotDispatch(req: NextRequest) {
             provider_message_id: result.providerMessageId,
             updated_at: new Date().toISOString(),
           })
-          .eq('id', msg.id);
+          .eq('id', messageId);
 
         // Record activity
         await supabaseAdmin.from('activities').insert({
           lead_id: msg.lead_id,
           activity_type: 'email_sent',
-          title: `Autonomous Outreach Dispatched to ${contact.email}`,
+          title: `Autonomous Outreach Dispatched to ${recipientEmail}`,
           description: `Subject: ${msg.subject}`,
-          metadata: { provider_message_id: result.providerMessageId },
+          metadata: { provider: result.provider, provider_message_id: result.providerMessageId },
           created_by: 'system',
         });
       } else {
@@ -151,7 +156,7 @@ async function handleAutopilotDispatch(req: NextRequest) {
             error_message: result.error || 'Failed to dispatch email',
             updated_at: new Date().toISOString(),
           })
-          .eq('id', msg.id);
+          .eq('id', messageId);
       }
     }
 
