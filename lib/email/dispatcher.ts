@@ -59,9 +59,13 @@ export async function dispatchOutreachEmail(payload: DispatchEmailPayload): Prom
     }
   }
 
-  // 2. Try Gmail OAuth2 if credentials are configured
+  // 2. Try Gmail (App Password SMTP or OAuth2 API) if configured
+  const gmailAppPass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASSWORD;
   const gmailClientId = process.env.GMAIL_CLIENT_ID;
-  if (gmailClientId && !gmailClientId.includes('your-gmail')) {
+  if (
+    (gmailAppPass && !gmailAppPass.includes('placeholder')) ||
+    (gmailClientId && !gmailClientId.includes('your-gmail'))
+  ) {
     try {
       const gmailRes = await sendEmailViaGmail({
         to: payload.to,
