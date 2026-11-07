@@ -25,6 +25,11 @@ import {
   Edit3,
   UserCheck,
   Plus,
+  Phone,
+  MessageCircle,
+  Instagram,
+  Copy,
+  Share2,
 } from 'lucide-react';
 
 export default function LeadDetailPage() {
@@ -484,13 +489,55 @@ export default function LeadDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 text-xs">
                   {lead.primary_contact ? (
-                    <div className="p-3 border border-slate-200 rounded-md bg-white space-y-1.5">
+                    <div className="p-3 border border-slate-200 rounded-md bg-white space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-slate-900">{lead.primary_contact.full_name}</span>
                         <Badge variant="success">Verified</Badge>
                       </div>
                       <p className="text-[11px] text-slate-500">{lead.primary_contact.job_title || 'Decision Maker'}</p>
-                      <p className="text-[11px] text-slate-700 font-medium">{lead.primary_contact.email}</p>
+                      
+                      {lead.primary_contact.email && (
+                        <p className="text-[11px] text-slate-700 font-medium font-mono">{lead.primary_contact.email}</p>
+                      )}
+
+                      {/* Omni-Channel Direct Handles */}
+                      <div className="pt-2 border-t border-slate-100 flex flex-col gap-1.5 font-mono text-[11px]">
+                        {(lead.primary_contact.whatsapp || lead.primary_contact.phone || company.whatsapp || company.phone) && (
+                          <div className="flex items-center justify-between text-slate-700">
+                            <span className="flex items-center gap-1.5 text-emerald-800">
+                              <MessageCircle className="h-3 w-3 text-emerald-600" />
+                              <span>{lead.primary_contact.whatsapp || lead.primary_contact.phone || company.whatsapp || company.phone}</span>
+                            </span>
+                            <a
+                              href={`https://wa.me/${(lead.primary_contact.whatsapp || lead.primary_contact.phone || company.whatsapp || company.phone).replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-[10px] text-emerald-700 hover:underline inline-flex items-center gap-0.5"
+                            >
+                              <span>Chat</span>
+                              <ExternalLink className="h-2 w-2" />
+                            </a>
+                          </div>
+                        )}
+
+                        {(lead.primary_contact.instagram_handle || company.instagram_handle) && (
+                          <div className="flex items-center justify-between text-slate-700">
+                            <span className="flex items-center gap-1.5 text-purple-800">
+                              <Instagram className="h-3 w-3 text-purple-600" />
+                              <span>@{lead.primary_contact.instagram_handle || company.instagram_handle}</span>
+                            </span>
+                            <a
+                              href={`https://instagram.com/${(lead.primary_contact.instagram_handle || company.instagram_handle).replace(/^@/, '')}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-[10px] text-purple-700 hover:underline inline-flex items-center gap-0.5"
+                            >
+                              <span>Profile</span>
+                              <ExternalLink className="h-2 w-2" />
+                            </a>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div className="text-center py-4 text-slate-400">
@@ -506,12 +553,17 @@ export default function LeadDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Outreach Generation Preview */}
+              {/* Outreach Automation */}
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-xs">Outreach Automation</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xs">Outreach Automation</CardTitle>
+                    <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                      $0 Free
+                    </span>
+                  </div>
                 </CardHeader>
-                <CardContent className="space-y-3 text-xs">
+                <CardContent className="space-y-3.5 text-xs">
                   <p className="text-slate-500 leading-relaxed">
                     Generate an 80-130 word email grounded in Queenstown Labs capabilities and this company&apos;s specific bottlenecks.
                   </p>
@@ -525,8 +577,59 @@ export default function LeadDetailPage() {
                     ) : (
                       <Mail className="h-3.5 w-3.5" />
                     )}
-                    <span>Generate Tailored Email</span>
+                    <span>Generate Tailored Email Draft</span>
                   </Button>
+
+                  {/* 1-Click Zero-Cost Multi-Channel Actions */}
+                  {(() => {
+                    const phoneRaw = lead.primary_contact?.whatsapp || lead.primary_contact?.phone || company.whatsapp || company.phone || '';
+                    const cleanPhone = phoneRaw.replace(/[^0-9]/g, '');
+                    const cleanIg = (lead.primary_contact?.instagram_handle || company.instagram_handle || '').replace(/^@/, '').trim();
+                    const whatsappPitch = `Hi ${lead.primary_contact?.full_name || 'Team'}, noticed ${company.name}'s growing operations in ${company.city || company.country}. At Queenstown Labs, we build custom mobile apps & client portals to automate bookings and customer operations. Would you be open to a 5-min chat this week?`;
+                    const igPitch = `Love what you're doing at ${company.name}! Quick question: have you explored having a dedicated mobile app for your direct clients? We engineer modern mobile platforms at Queenstown Labs.`;
+
+                    return (
+                      <div className="pt-2 border-t border-slate-100 space-y-2">
+                        <span className="font-semibold text-slate-800 text-[11px] block">
+                          Instant Fallback Channels ($0 Cost):
+                        </span>
+
+                        {cleanPhone ? (
+                          <a
+                            href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappPitch)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full h-8 text-xs inline-flex items-center justify-center gap-1.5 rounded-md border border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 font-medium transition-colors"
+                          >
+                            <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
+                            <span>1-Click WhatsApp Pitch</span>
+                            <ExternalLink className="h-2.5 w-2.5 ml-auto text-emerald-600 mr-2" />
+                          </a>
+                        ) : null}
+
+                        {cleanIg ? (
+                          <a
+                            href={`https://ig.me/m/${cleanIg}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={() => {
+                              navigator.clipboard.writeText(igPitch);
+                              toast({
+                                title: 'Pitch Copied!',
+                                message: 'Instagram DM pitch copied to clipboard. Ready to paste.',
+                                type: 'success',
+                              });
+                            }}
+                            className="w-full h-8 text-xs inline-flex items-center justify-center gap-1.5 rounded-md border border-purple-300 bg-purple-50 text-purple-900 hover:bg-purple-100 font-medium transition-colors"
+                          >
+                            <Instagram className="h-3.5 w-3.5 text-purple-600" />
+                            <span>1-Click Instagram DM</span>
+                            <ExternalLink className="h-2.5 w-2.5 ml-auto text-purple-600 mr-2" />
+                          </a>
+                        ) : null}
+                      </div>
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </div>

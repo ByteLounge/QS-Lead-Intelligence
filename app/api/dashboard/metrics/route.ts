@@ -23,7 +23,7 @@ export async function GET() {
         supabaseAdmin.from('companies').select('*').order('created_at', { ascending: false }),
         supabaseAdmin.from('leads').select('*, company:companies(*), primary_contact:contacts(*)').order('qualification_score', { ascending: false }),
         supabaseAdmin.from('contacts').select('*, company:companies(*)'),
-        supabaseAdmin.from('outreach_messages').select('*, contact:contacts(*), lead:leads(*)'),
+        supabaseAdmin.from('outreach_messages').select('*, contact:contacts(*, company:companies(*)), lead:leads(*, company:companies(*))'),
         supabaseAdmin.from('email_replies').select('*, contact:contacts(*)'),
         supabaseAdmin.from('opportunities').select('*, lead:leads(*), company:companies(*)'),
       ]);

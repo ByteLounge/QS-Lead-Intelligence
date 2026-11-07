@@ -4,6 +4,7 @@
 
 import { sendEmailViaGmail } from './gmail';
 import { supabaseAdmin, isSupabaseConfigured } from '../supabase/client';
+import { verifyEmailDomain } from './verify';
 
 export interface DispatchEmailPayload {
   to: string;
@@ -22,6 +23,18 @@ export interface DispatchEmailResult {
 }
 
 export async function dispatchOutreachEmail(payload: DispatchEmailPayload): Promise<DispatchEmailResult> {
+  // Pre-Send Native DNS MX Verification (Zero-Cost DNS check to eliminate bounces)
+  const mxCheck = await verifyEmailDomain(payload.to);
+  if (!mxCheck.deliverable) {
+    console.warn(`[DNS MX Check Blocked] Recipient: ${payload.to} | Reason: ${mxCheck.reason}`);
+    return {
+      success: false,
+      provider: 'simulation',
+      providerMessageId: '',
+      error: mxCheck.reason || 'Domain has no active MX servers',
+    };
+  }
+
   const resendApiKey = process.env.RESEND_API_KEY;
   const fromName = payload.fromName || 'Queenstown Labs';
   const fromEmail = payload.fromEmail || process.env.SENDER_EMAIL || 'solutions@queenstownlabs.com';

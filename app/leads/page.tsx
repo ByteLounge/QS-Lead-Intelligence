@@ -19,6 +19,9 @@ import {
   ExternalLink,
   Plus,
   Target,
+  MessageCircle,
+  Instagram,
+  Phone,
 } from 'lucide-react';
 
 export default function LeadsPage() {
@@ -217,17 +220,44 @@ export default function LeadsPage() {
                               <span>{company.name || 'Unnamed Company'}</span>
                               <ArrowUpRight className="h-3 w-3 text-[#999999]" />
                             </Link>
-                            {company.website && (
-                              <a
-                                href={company.website}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[11px] text-[#777777] hover:text-[#111111] inline-flex items-center gap-1 mt-0.5 font-mono"
-                              >
-                                <span>{company.domain || company.website}</span>
-                                <ExternalLink className="h-2.5 w-2.5" />
-                              </a>
-                            )}
+                            <div className="flex flex-wrap items-center gap-1.5 mt-1 font-mono text-[10px]">
+                              {company.website && (
+                                <a
+                                  href={company.website}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[#777777] hover:text-[#111111] inline-flex items-center gap-0.5"
+                                  title="Visit website"
+                                >
+                                  <span>{company.domain || 'website'}</span>
+                                  <ExternalLink className="h-2 w-2" />
+                                </a>
+                              )}
+                              {(company.whatsapp || company.phone) && (
+                                <a
+                                  href={`https://wa.me/${(company.whatsapp || company.phone).replace(/[^0-9]/g, '')}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex items-center gap-0.5 text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 hover:bg-emerald-100"
+                                  title={`1-Click WhatsApp: ${company.whatsapp || company.phone}`}
+                                >
+                                  <MessageCircle className="h-2.5 w-2.5 text-emerald-600" />
+                                  <span>WA</span>
+                                </a>
+                              )}
+                              {company.instagram_handle && (
+                                <a
+                                  href={`https://instagram.com/${company.instagram_handle.replace(/^@/, '')}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex items-center gap-0.5 text-purple-800 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200 hover:bg-purple-100"
+                                  title={`1-Click Instagram: @${company.instagram_handle}`}
+                                >
+                                  <Instagram className="h-2.5 w-2.5 text-purple-600" />
+                                  <span>IG</span>
+                                </a>
+                              )}
+                            </div>
                           </td>
 
                           <td className="p-4 text-[#555555]">

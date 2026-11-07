@@ -18,6 +18,13 @@ import {
   Clock,
   Sparkles,
   ShieldAlert,
+  Phone,
+  MessageCircle,
+  Instagram,
+  Copy,
+  ExternalLink,
+  Smartphone,
+  Share2,
 } from 'lucide-react';
 
 export default function EmailApprovalsPage() {
@@ -50,6 +57,54 @@ export default function EmailApprovalsPage() {
     setEditingId(msg.id);
     setEditSubject(msg.subject);
     setEditBody(msg.body);
+  };
+
+  const handleCopy = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: `${label} Copied`,
+      message: 'Copied to clipboard. Ready to paste directly into chat at $0 cost.',
+      type: 'success',
+    });
+  };
+
+  const handleOpenWhatsApp = (phone: string, pitch: string) => {
+    const clean = phone.replace(/[^0-9]/g, '');
+    if (!clean) {
+      toast({
+        title: 'No Phone Number',
+        message: 'No verified phone or WhatsApp number available for this contact.',
+        type: 'warning',
+      });
+      return;
+    }
+    const url = `https://wa.me/${clean}?text=${encodeURIComponent(pitch)}`;
+    window.open(url, '_blank');
+    toast({
+      title: 'Opening WhatsApp Web',
+      message: 'Personalized pitch pre-filled at $0 cost.',
+      type: 'success',
+    });
+  };
+
+  const handleOpenInstagram = (handle: string, pitch: string) => {
+    const clean = handle.replace(/^@/, '').trim();
+    if (!clean) {
+      toast({
+        title: 'No Instagram Handle',
+        message: 'No Instagram profile mapped for this contact.',
+        type: 'warning',
+      });
+      return;
+    }
+    navigator.clipboard.writeText(pitch);
+    const url = `https://ig.me/m/${clean}`;
+    window.open(url, '_blank');
+    toast({
+      title: 'Opening Instagram DM',
+      message: 'Custom pitch copied to clipboard! Paste directly into their direct message.',
+      type: 'success',
+    });
   };
 
   const handleApprove = async (msgId: string) => {
@@ -199,6 +254,20 @@ export default function EmailApprovalsPage() {
               {messages.map((msg) => {
                 const isEditing = editingId === msg.id;
                 const isBusy = actionInProgress === msg.id;
+                const company = msg.contact?.company || msg.lead?.company || {};
+                const phone = msg.contact?.whatsapp || msg.contact?.phone || company.whatsapp || company.phone || '';
+                const igHandle = (msg.contact?.instagram_handle || company.instagram_handle || '').replace(/^@/, '').trim();
+
+                let notesObj: any = {};
+                try {
+                  notesObj = JSON.parse(msg.personalisation_notes || '{}');
+                } catch {
+                  notesObj = { opportunity: msg.personalisation_notes };
+                }
+
+                const whatsappPitch = notesObj.whatsapp_pitch || `Hi ${msg.contact?.full_name || 'Team'}, we noticed ${company.name || 'your enterprise'}'s operations. At Queenstown Labs, we build custom mobile apps & client portals to streamline customer bookings and operations. Would you be open to a 5-min demo this week?`;
+                const instagramPitch = notesObj.instagram_pitch || `Love what you're doing with ${company.name || 'your brand'}! Quick question: have you explored having a dedicated mobile app for your direct clients? We build high-converting mobile apps at Queenstown Labs.`;
+                const opportunityText = notesObj.opportunity || notesObj.service_needed || msg.personalisation_notes;
 
                 return (
                   <div
@@ -208,9 +277,9 @@ export default function EmailApprovalsPage() {
                     {/* Header info */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                       <div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="font-bold text-slate-900 text-sm">
-                            {msg.contact?.company?.name || 'Prospect Company'}
+                            {company.name || 'Prospect Company'}
                           </span>
                           <Badge variant="warning" className="text-[10px]">
                             Pending Safety Approval
@@ -218,9 +287,25 @@ export default function EmailApprovalsPage() {
                           <span className="text-[11px] text-slate-400">
                             Sequence {msg.sequence_number == 0 ? '0 (Intro)' : `(${msg.sequence_number})`}
                           </span>
+
+                          {phone && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                              <Phone className="h-2.5 w-2.5 text-emerald-600" />
+                              <span>{phone}</span>
+                            </span>
+                          )}
+
+                          {igHandle && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-purple-800 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
+                              <Instagram className="h-2.5 w-2.5 text-purple-600" />
+                              <span>@{igHandle}</span>
+                            </span>
+                          )}
                         </div>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
+
+                        <p className="text-[11px] text-slate-500 mt-1">
                           Recipient: <span className="font-semibold text-slate-700">{msg.contact?.full_name}</span> &lt;{msg.contact?.email}&gt;
+                          {company.city && <span className="text-slate-400 ml-1.5">• {company.city}, {company.country}</span>}
                         </p>
                       </div>
 
@@ -266,15 +351,116 @@ export default function EmailApprovalsPage() {
                     )}
 
                     {/* Grounding Explanation */}
-                    {msg.personalisation_notes && (
+                    {opportunityText && (
                       <div className="p-2.5 bg-blue-50/60 border border-blue-100 rounded text-[11px] text-blue-900 flex items-start gap-2">
                         <Sparkles className="h-3.5 w-3.5 text-blue-600 mt-0.5 flex-shrink-0" />
                         <div>
                           <span className="font-semibold">Personalisation Grounding: </span>
-                          <span>{msg.personalisation_notes}</span>
+                          <span>{opportunityText}</span>
                         </div>
                       </div>
                     )}
+
+                    {/* Free Multi-Channel Outreach Fallback ($0 Cost: WhatsApp & Instagram) */}
+                    <div className="p-3.5 bg-[#fcfcfc] border border-slate-200 rounded-lg space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 text-slate-800 font-semibold text-[11px]">
+                          <Share2 className="h-3.5 w-3.5 text-slate-700" />
+                          <span>Zero-Cost Direct Channels (100% Free WhatsApp &amp; Instagram DM)</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                          $0 Cost • No API Fees
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                        {/* WhatsApp Box */}
+                        <div className="p-3 bg-white border border-emerald-100 rounded-md space-y-2 flex flex-col justify-between">
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-emerald-900 text-[11px] flex items-center gap-1">
+                                <MessageCircle className="h-3 w-3 text-emerald-600" />
+                                <span>WhatsApp Direct</span>
+                              </span>
+                              {phone ? (
+                                <span className="font-mono text-[10px] text-slate-500">{phone}</span>
+                              ) : (
+                                <span className="text-[10px] text-amber-600">No phone</span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-slate-600 line-clamp-3 bg-slate-50 p-2 rounded border border-slate-100 italic">
+                              &ldquo;{whatsappPitch}&rdquo;
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleOpenWhatsApp(phone, whatsappPitch)}
+                              disabled={!phone}
+                              className="h-7 px-2.5 text-[11px] gap-1 text-emerald-800 border-emerald-200 hover:bg-emerald-50 flex-1"
+                            >
+                              <MessageCircle className="h-3 w-3 text-emerald-600" />
+                              <span>Open WhatsApp</span>
+                              <ExternalLink className="h-2.5 w-2.5 ml-auto text-emerald-600" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleCopy(whatsappPitch, 'WhatsApp Pitch')}
+                              className="h-7 px-2 text-[11px] text-slate-600 hover:text-slate-900"
+                              title="Copy pitch to clipboard"
+                            >
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+
+                        {/* Instagram DM Box */}
+                        <div className="p-3 bg-white border border-purple-100 rounded-md space-y-2 flex flex-col justify-between">
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-purple-900 text-[11px] flex items-center gap-1">
+                                <Instagram className="h-3 w-3 text-purple-600" />
+                                <span>Instagram Direct</span>
+                              </span>
+                              {igHandle ? (
+                                <span className="font-mono text-[10px] text-purple-700 font-medium">@{igHandle}</span>
+                              ) : (
+                                <span className="text-[10px] text-amber-600">No handle</span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-slate-600 line-clamp-3 bg-slate-50 p-2 rounded border border-slate-100 italic">
+                              &ldquo;{instagramPitch}&rdquo;
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleOpenInstagram(igHandle, instagramPitch)}
+                              disabled={!igHandle}
+                              className="h-7 px-2.5 text-[11px] gap-1 text-purple-800 border-purple-200 hover:bg-purple-50 flex-1"
+                            >
+                              <Instagram className="h-3 w-3 text-purple-600" />
+                              <span>Open Instagram DM</span>
+                              <ExternalLink className="h-2.5 w-2.5 ml-auto text-purple-600" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleCopy(instagramPitch, 'Instagram DM Pitch')}
+                              className="h-7 px-2 text-[11px] text-slate-600 hover:text-slate-900"
+                              title="Copy pitch to clipboard"
+                            >
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Footer Actions */}
                     <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-100">

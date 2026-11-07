@@ -59,6 +59,10 @@ export interface Company {
   country: string;
   city?: string | null;
   address?: string | null;
+  phone?: string | null;
+  whatsapp?: string | null;
+  instagram_handle?: string | null;
+  linkedin_url?: string | null;
   description?: string | null;
   discovery_source: DiscoverySource;
   source_url?: string | null;
@@ -76,6 +80,10 @@ export interface Contact {
   email: string;
   normalized_email: string;
   job_title?: string | null;
+  phone?: string | null;
+  whatsapp?: string | null;
+  instagram_handle?: string | null;
+  linkedin_url?: string | null;
   country?: string | null;
   source_url?: string | null;
   source_type: 'website' | 'contact_page' | 'manual' | 'enrichment';
@@ -157,6 +165,7 @@ export interface OutreachMessage {
   campaign_id?: string | null;
   lead_id: string;
   contact_id: string;
+  channel?: 'email' | 'whatsapp' | 'instagram' | 'linkedin' | string;
   sequence_number: number;
   subject: string;
   body: string;

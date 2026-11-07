@@ -77,6 +77,12 @@ interface GeneratedDiscoveryTarget {
   contact_name: string;
   contact_title: string;
   contact_email: string;
+  phone?: string;
+  whatsapp?: string;
+  instagram_handle?: string;
+  linkedin_url?: string;
+  whatsapp_pitch?: string;
+  instagram_pitch?: string;
   outreach_subject: string;
   outreach_body: string;
 }
@@ -119,7 +125,7 @@ export async function handleAutopilotDiscovery(req?: NextRequest) {
 
     const prompt = `You are Senior Lead Intelligence Director at Queenstown Labs (a software engineering studio building custom mobile apps, modern web platforms, and client portals).
 Discover 2 REAL, actual commercial enterprises in ${target.city}, ${target.country} in the sector "${target.industry}" that need custom software (e.g. a custom mobile app, client portal, or modern website redesign).
-Do not make up fake domain names or demo suffixes. Return real businesses.
+Do not make up fake domain names or demo suffixes. Return real businesses with their actual contact touchpoints (phone, WhatsApp, Instagram handle, and domain).
 Output strictly a JSON array without markdown formatting:
 [
   {
@@ -137,6 +143,12 @@ Output strictly a JSON array without markdown formatting:
     "contact_name": "Executive / Operations Director",
     "contact_title": "Head of Operations & Digital Initiatives",
     "contact_email": "contact@realdomain.com",
+    "phone": "+91 832 277 1234",
+    "whatsapp": "+918322771234",
+    "instagram_handle": "company_handle",
+    "linkedin_url": "https://linkedin.com/company/realdomain",
+    "whatsapp_pitch": "Hi Team [Company], noticed your growing operations in [City]. We build custom mobile apps & client portals at Queenstown Labs to automate customer bookings and inquiries. Would you be open to a 5-min demo this week?",
+    "instagram_pitch": "Love the brand aesthetic! Quick question: have you explored having a dedicated mobile app for your direct clients/bookings? We specialize in high-converting mobile apps at Queenstown Labs.",
     "outreach_subject": "Professional 5-7 word subject line specific to their company",
     "outreach_body": "80-110 word direct, professional cold outreach email from Queenstown Labs pitching the specific app or website solution to eliminate their bottleneck. Sign off: Queenstown Labs Engineering Team."
   }
@@ -185,6 +197,11 @@ Output strictly a JSON array without markdown formatting:
     // 3. Persist Companies, Contacts, Leads, Deal Opportunities & Outreach in Supabase
     for (const item of discoveredTargets) {
       const cleanDomain = item.domain || extractDomainFromUrl(item.website);
+      const cleanPhone = item.phone || null;
+      const cleanWhatsApp = item.whatsapp ? item.whatsapp.replace(/[^0-9+]/g, '') : cleanPhone ? cleanPhone.replace(/[^0-9+]/g, '') : null;
+      const cleanInstagram = item.instagram_handle ? item.instagram_handle.replace(/^@/, '').trim() : null;
+      const cleanLinkedIn = item.linkedin_url || null;
+
       const { data: comp, error: compErr } = await supabaseAdmin
         .from('companies')
         .upsert(
@@ -196,6 +213,10 @@ Output strictly a JSON array without markdown formatting:
             country: item.country || target.country,
             city: item.city || target.city,
             address: item.address || null,
+            phone: cleanPhone,
+            whatsapp: cleanWhatsApp,
+            instagram_handle: cleanInstagram,
+            linkedin_url: cleanLinkedIn,
             description: item.software_opportunity || `Commercial enterprise operating in ${target.city}`,
             discovery_source: 'google_places',
             source_url: `https://www.google.com/maps/search/${encodeURIComponent(item.company_name)}`,
@@ -257,6 +278,10 @@ Output strictly a JSON array without markdown formatting:
               email,
               normalized_email: email.toLowerCase(),
               job_title: item.contact_title || 'Head of Operations',
+              phone: cleanPhone,
+              whatsapp: cleanWhatsApp,
+              instagram_handle: cleanInstagram,
+              linkedin_url: cleanLinkedIn,
               country: comp.country,
               source_type: 'website',
               verification_status: 'valid',
@@ -282,6 +307,16 @@ Output strictly a JSON array without markdown formatting:
           assigned_to: 'Vikram Mehta (Tech BD)',
         });
 
+        // Structured omnichannel outreach notes with WhatsApp & Instagram pitches
+        const omnichannelNotes = JSON.stringify({
+          opportunity: item.software_opportunity,
+          service_needed: item.service_needed,
+          whatsapp_pitch: item.whatsapp_pitch || `Hi ${item.contact_name || 'Team'}, we build custom mobile apps & portals at Queenstown Labs. Would love to share ideas for ${comp.name}.`,
+          instagram_pitch: item.instagram_pitch || `Love your brand! We build high-converting mobile apps and booking platforms at Queenstown Labs.`,
+          phone: cleanWhatsApp || cleanPhone,
+          instagram_handle: cleanInstagram,
+        });
+
         if (contact) {
           const autoSend = compliance.sending_enabled && !compliance.human_approval_required;
 
@@ -298,12 +333,14 @@ Output strictly a JSON array without markdown formatting:
             await supabaseAdmin.from('outreach_messages').insert({
               lead_id: lead.id,
               contact_id: contact.id,
+              channel: 'email',
               sequence_number: 0,
               subject: item.outreach_subject,
               body: item.outreach_body,
-              personalisation_notes: item.software_opportunity,
+              personalisation_notes: omnichannelNotes,
               quality_score: totalScore,
               status: sendResult.success ? 'sent' : 'failed',
+              error_message: sendResult.success ? null : (sendResult.error || 'Failed to dispatch email'),
               sent_at: sendResult.success ? new Date().toISOString() : null,
               provider_message_id: sendResult.providerMessageId,
             });
@@ -322,10 +359,11 @@ Output strictly a JSON array without markdown formatting:
             await supabaseAdmin.from('outreach_messages').insert({
               lead_id: lead.id,
               contact_id: contact.id,
+              channel: 'email',
               sequence_number: 0,
               subject: item.outreach_subject,
               body: item.outreach_body,
-              personalisation_notes: item.software_opportunity,
+              personalisation_notes: omnichannelNotes,
               quality_score: totalScore,
               status: 'pending_approval',
             });

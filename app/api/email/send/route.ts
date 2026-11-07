@@ -7,6 +7,7 @@ import { evaluateSendingEligibility } from '@/lib/compliance/safeguards';
 import { isEmailSuppressed } from '@/lib/contacts/manager';
 import { sendEmailViaGmail } from '@/lib/email/gmail';
 import { sendTelegramNotification } from '@/lib/notifications/telegram';
+import { verifyEmailDomain } from '@/lib/email/verify';
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,6 +17,18 @@ export async function POST(req: NextRequest) {
     if (!message_id || !to || !subject || !emailBody) {
       return NextResponse.json(
         { error: 'message_id, to, subject, and body are required.' },
+        { status: 400 }
+      );
+    }
+
+    // Pre-Send Native DNS MX Email Deliverability Check (Zero Cost)
+    const mxCheck = await verifyEmailDomain(to);
+    if (!mxCheck.deliverable) {
+      return NextResponse.json(
+        {
+          error: `Email deliverability check failed: ${mxCheck.reason}. Use 1-Click WhatsApp or Instagram DM below instead to reach them at $0 cost!`,
+          mxFailed: true,
+        },
         { status: 400 }
       );
     }
