@@ -146,6 +146,7 @@ export async function GET() {
         recentLeads: leads.slice(0, 5),
         recentReplies: replies.slice(0, 5),
         pendingApprovals,
+        allOutreach: outreach,
         systemHealth,
       },
       {

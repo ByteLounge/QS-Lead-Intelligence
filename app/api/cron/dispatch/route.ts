@@ -59,7 +59,7 @@ async function handleAutopilotDispatch(req: NextRequest) {
       }, { status: 200 });
     }
 
-    const batchLimit = Math.min(5, availableSlots);
+    const batchLimit = Math.min(3, availableSlots);
     let messages: any[] = [];
 
     // 2. Claim up to batchLimit messages (Try RPC first with correct 'p_limit' parameter)
@@ -158,6 +158,9 @@ async function handleAutopilotDispatch(req: NextRequest) {
           })
           .eq('id', messageId);
       }
+
+      // Pacing delay (3.5s) between consecutive SMTP dispatches to avoid Google's automated burst-abuse detection
+      await new Promise((resolve) => setTimeout(resolve, 3500));
     }
 
     // 3. Notify Discord if any emails were dispatched

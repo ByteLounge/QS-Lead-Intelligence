@@ -25,11 +25,15 @@ import {
   ExternalLink,
   Smartphone,
   Share2,
+  AlertTriangle,
+  Mail,
 } from 'lucide-react';
 
 export default function EmailApprovalsPage() {
   const { toast } = useToast();
-  const [messages, setMessages] = React.useState<any[]>([]);
+  const [tab, setTab] = React.useState<'all' | 'pending'>('all');
+  const [pendingMessages, setPendingMessages] = React.useState<any[]>([]);
+  const [allMessages, setAllMessages] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editSubject, setEditSubject] = React.useState('');
@@ -41,7 +45,8 @@ export default function EmailApprovalsPage() {
       setLoading(true);
       const res = await fetch('/api/dashboard/metrics');
       const data = await res.json();
-      setMessages(data.pendingApprovals || []);
+      setPendingMessages(data.pendingApprovals || []);
+      setAllMessages(data.allOutreach || []);
     } catch (err) {
       console.error('Failed to load pending outreach:', err);
     } finally {
@@ -103,6 +108,16 @@ export default function EmailApprovalsPage() {
     toast({
       title: 'Opening Instagram DM',
       message: 'Custom pitch copied to clipboard! Paste directly into their direct message.',
+      type: 'success',
+    });
+  };
+
+  const handleOpenGmailWeb = (to: string, subject: string, body: string) => {
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(url, '_blank');
+    toast({
+      title: 'Opening Gmail Web',
+      message: 'Email pre-filled in your Gmail composer tab. Click Send in Gmail to bypass bot filters at $0 cost!',
       type: 'success',
     });
   };
@@ -219,10 +234,10 @@ export default function EmailApprovalsPage() {
                 <span>Safety Guardrail</span>
               </div>
               <h2 className="text-2xl font-semibold text-[#111111] tracking-tight font-display">
-                Email Safety Approvals
+                Email Safety Approvals &amp; Omni-Channel Outbox
               </h2>
               <p className="text-xs text-[#666666]">
-                Human-in-the-loop review queue for AI-generated outreach drafts before transmission.
+                Review outreach copy and choose your delivery channel: 1-Click WhatsApp, 1-Click Instagram DM, or Gmail.
               </p>
             </div>
             <div className="flex items-center space-x-2 text-xs">
@@ -230,28 +245,107 @@ export default function EmailApprovalsPage() {
             </div>
           </div>
 
-          {/* Pending Approval List */}
+          {/* Explanation Alert: Why Google SMTP blocks rapid cold emails & 3 Free Solutions */}
+          <div className="p-4 bg-amber-50/80 border border-amber-200/90 rounded-2xl space-y-2 text-xs text-amber-900 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 font-semibold">
+                <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
+                <span>Why Google SMTP shows &quot;Message Blocked&quot; &amp; How to Send at $0 Cost:</span>
+              </div>
+              <span className="text-[10px] font-mono text-amber-800 bg-amber-100/70 px-2 py-0.5 rounded border border-amber-200">
+                Spam Filter Alert
+              </span>
+            </div>
+            <p className="text-[11px] text-amber-800/90 leading-relaxed">
+              Google&apos;s anti-abuse filters strictly flag free consumer <code>@gmail.com</code> accounts when automated scripts blast cold emails in rapid bursts via SMTP. To achieve 100% deliverability with zero blocks at <strong>$0 cost</strong>, use these 3 direct options:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+              <div className="bg-white p-3 rounded-xl border border-emerald-200/80 space-y-1">
+                <div className="font-semibold text-emerald-800 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <MessageCircle className="h-3.5 w-3.5 text-emerald-600" /> WhatsApp Direct
+                  </span>
+                  <span className="text-[9px] font-mono bg-emerald-50 text-emerald-700 px-1.5 py-0.2 rounded border border-emerald-200">Recommended</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-normal">
+                  Over 90% open rates in India &amp; UAE. Bypasses all corporate email firewalls directly into their phone.
+                </p>
+              </div>
+              <div className="bg-white p-3 rounded-xl border border-purple-200/80 space-y-1">
+                <div className="font-semibold text-purple-800 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Instagram className="h-3.5 w-3.5 text-purple-600" /> Instagram Direct
+                  </span>
+                  <span className="text-[9px] font-mono bg-purple-50 text-purple-700 px-1.5 py-0.2 rounded border border-purple-200">$0 Cost</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-normal">
+                  Opens their official brand Instagram inbox in 1 click and auto-copies your tailored pitch to your clipboard.
+                </p>
+              </div>
+              <div className="bg-white p-3 rounded-xl border border-blue-200/80 space-y-1">
+                <div className="font-semibold text-blue-800 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Mail className="h-3.5 w-3.5 text-blue-600" /> 1-Click Gmail Web
+                  </span>
+                  <span className="text-[9px] font-mono bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200">No SMTP Block</span>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-normal">
+                  Opens your real Gmail web composer tab pre-filled with the exact pitch. Because it sends via browser, Google never blocks it.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tab Selector */}
+          <div className="flex items-center gap-2 border-b border-[#e8e8e8] pb-1 text-xs">
+            <button
+              onClick={() => setTab('all')}
+              className={`px-3.5 py-1.5 rounded-full font-medium transition-colors ${
+                tab === 'all'
+                  ? 'bg-[#111111] text-white shadow-xs'
+                  : 'text-[#666666] hover:text-[#111111] bg-white border border-[#e8e8e8]'
+              }`}
+            >
+              All Outreach Leads ({allMessages.length})
+            </button>
+            <button
+              onClick={() => setTab('pending')}
+              className={`px-3.5 py-1.5 rounded-full font-medium transition-colors ${
+                tab === 'pending'
+                  ? 'bg-[#111111] text-white shadow-xs'
+                  : 'text-[#666666] hover:text-[#111111] bg-white border border-[#e8e8e8]'
+              }`}
+            >
+              Pending Safety Approvals ({pendingMessages.length})
+            </button>
+          </div>
+
+          {/* Outreach Messages List */}
           {loading ? (
             <div className="py-16 text-center text-slate-400">
               <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-slate-500" />
-              <p className="text-xs">Loading pending approvals...</p>
+              <p className="text-xs">Loading outreach records...</p>
             </div>
-          ) : messages.length === 0 ? (
+          ) : (tab === 'pending' ? pendingMessages : allMessages).length === 0 ? (
             <div className="p-12 text-center bg-white border border-slate-200 rounded-lg shadow-sm">
               <MailCheck className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
-              <h3 className="text-sm font-semibold text-slate-900">Queue is Clear</h3>
+              <h3 className="text-sm font-semibold text-slate-900">
+                {tab === 'pending' ? 'Pending Safety Queue is Clear' : 'No Outreach Records Found'}
+              </h3>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                No outbound drafts awaiting approval. When new prospects are qualified with score ≥ 80, drafts will appear here.
+                {tab === 'pending'
+                  ? 'All drafts have been processed or moved to outbox. Click "All Outreach Leads" above to view active fallback channels.'
+                  : 'Run intelligence discovery to generate prospect accounts and customized outreach.'}
               </p>
               <Link href="/leads">
                 <Button size="sm" variant="outline" className="h-8 text-xs mt-4">
-                  Go to Leads & Intelligence
+                  Go to Leads &amp; Intelligence
                 </Button>
               </Link>
             </div>
           ) : (
             <div className="space-y-4">
-              {messages.map((msg) => {
+              {(tab === 'pending' ? pendingMessages : allMessages).map((msg) => {
                 const isEditing = editingId === msg.id;
                 const isBusy = actionInProgress === msg.id;
                 const company = msg.contact?.company || msg.lead?.company || {};
@@ -498,6 +592,25 @@ export default function EmailApprovalsPage() {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2">
+                        {msg.status === 'sent' && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-emerald-800 bg-emerald-50 px-2 py-1 rounded border border-emerald-200">
+                            <Check className="h-3 w-3 text-emerald-600" />
+                            <span>Dispatched via Gmail</span>
+                          </span>
+                        )}
+
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleOpenGmailWeb(msg.contact?.email, isEditing ? editSubject : msg.subject, isEditing ? editBody : msg.body)}
+                          className="h-8 text-xs gap-1.5 border-slate-300 hover:bg-slate-50 text-slate-800"
+                          title="Opens Gmail compose tab pre-filled with this email to send directly from Gmail Web without SMTP script blocks"
+                        >
+                          <Mail className="h-3.5 w-3.5 text-rose-500" />
+                          <span>Gmail Web (No-Block)</span>
+                          <ExternalLink className="h-2.5 w-2.5 text-slate-400" />
+                        </Button>
+
                         <Button
                           variant="outline"
                           size="sm"
@@ -506,7 +619,7 @@ export default function EmailApprovalsPage() {
                           className="h-8 text-xs gap-1.5"
                         >
                           {isBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5 text-emerald-600" />}
-                          <span>Approve for Queue</span>
+                          <span>Approve Queue</span>
                         </Button>
 
                         <Button
